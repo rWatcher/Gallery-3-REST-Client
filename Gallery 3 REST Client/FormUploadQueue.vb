@@ -55,6 +55,8 @@ Public Partial Class FormUploadQueue
         End If
         
         buttonUpload.Enabled = False
+        Me.Cursor = Cursors.WaitCursor
+        
 		Dim OneQueueItem As ListViewItem
 		progressUpload.Value = 0
 		progressUpload.Maximum = listUploadQueue.Items.Count
@@ -79,5 +81,6 @@ Public Partial Class FormUploadQueue
 			Application.DoEvents()
 		Next
         buttonUpload.Enabled = True
+        Me.Cursor = Cursors.Default
 	End Sub
 End Class
