@@ -63,6 +63,7 @@ Public Partial Class FormAlbumBrowser
         Dim SelectedAlbumID = treeAlbums.SelectedNode.Tag
         Dim SelectedAlbum As Linq.JObject = GalleryClient.GetItem(Convert.ToInt32(treeAlbums.SelectedNode.Tag))
         Dim ChildItems As List(Of String) = GalleryClient.GetItems(SelectedAlbum("members"))
+
         If Not ChildItems Is Nothing Then
             'Dim DefaultFileThumbImage As System.Drawing.Image = Image.FromFile(Application.StartupPath & "\default.png")
             'ImageListThumbs.Images.Add(0, DefaultFileThumbImage)
