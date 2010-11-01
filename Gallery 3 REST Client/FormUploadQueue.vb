@@ -55,6 +55,7 @@ Public Partial Class FormUploadQueue
         End If
         
         buttonUpload.Enabled = False
+        buttonAddToQueue.Enabled = False
         Me.Cursor = Cursors.WaitCursor
         
 		Dim OneQueueItem As ListViewItem
@@ -81,6 +82,7 @@ Public Partial Class FormUploadQueue
 			Application.DoEvents()
 		Next
         buttonUpload.Enabled = True
+        buttonAddToQueue.Enabled = True
         Me.Cursor = Cursors.Default
 	End Sub
 End Class

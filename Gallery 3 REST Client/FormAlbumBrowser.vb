@@ -62,6 +62,9 @@ Public Partial Class FormAlbumBrowser
 
         Dim SelectedAlbumID = treeAlbums.SelectedNode.Tag
         Dim SelectedAlbum As Linq.JObject = GalleryClient.GetItem(Convert.ToInt32(treeAlbums.SelectedNode.Tag))
+        If SelectedAlbum Is Nothing Then
+        	Exit Sub
+        End If
         Dim ChildItems As List(Of String) = GalleryClient.GetItems(SelectedAlbum("members"))
 
         If Not ChildItems Is Nothing Then
@@ -150,6 +153,7 @@ Public Partial Class FormAlbumBrowser
             Dim selectedItem As Linq.JObject = GalleryClient.GetItem(Convert.ToInt32(listPictures.SelectedItems(0).Tag))
 
             If selectedItem("entity").Item("type").ToString = """photo""" Then
+            	labelGalleryStatus.Text = "Loading Image..."
                 Dim strFileResizePath As String = Application.StartupPath & "\cache\" & listPictures.SelectedItems(0).Tag & "_resize"
                 If System.IO.File.Exists(strFileResizePath) Then
                     Dim WindowViewResize As New formViewPicture
@@ -177,6 +181,7 @@ Public Partial Class FormAlbumBrowser
                     WindowViewResize.Text = listPictures.SelectedItems(0).Text
                     WindowViewResize.Show()
                 End If
+                labelGalleryStatus.Text = "Ready"
             ElseIf selectedItem("entity").Item("type").ToString = """movie""" Then
                 If MessageBox.Show("Movie viewing is not available at this time, would you like to download the file instead?", "Unsupported File Type", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
                     Dim SaveMovieAsDialog As New SaveFileDialog
@@ -201,6 +206,8 @@ Public Partial Class FormAlbumBrowser
 	Sub CompareToLocalFolderToolStripMenuItemClick(sender As Object, e As EventArgs)
 		Dim LocalFolder As New FolderBrowserDialog
         If LocalFolder.ShowDialog = Windows.Forms.DialogResult.OK Then
+        	Me.Cursor = Cursors.WaitCursor
+
             Dim checksumWindow As New formChecksums
             checksumWindow.GalleryClient = GalleryClient
             checksumWindow.txtLocalFolder.Text = LocalFolder.SelectedPath
@@ -221,6 +228,7 @@ Public Partial Class FormAlbumBrowser
             checksumWindow.statusCompare.Text = "Generating Checksums"
             checksumWindow.CompareFiles()
             checksumWindow.statusCompare.Text = "Files that didn't match have been bolded."
+        Me.Cursor = Cursors.Default
 
         End If
 	End Sub
@@ -228,14 +236,26 @@ Public Partial Class FormAlbumBrowser
 	Sub UploadFilesToolStripMenuItemClick(sender As Object, e As EventArgs)
 		Dim OneAlbum As TreeNode = treeAlbums.SelectedNode
 		Dim WindowUploadQueue As New FormUploadQueue 
+		Dim AlbumID as Integer = Convert.ToInt32(treeAlbums.SelectedNode.Tag)
 		WindowUploadQueue.GalleryClient = GalleryClient
 		WindowUploadQueue.textUploadDestination.Text = treeAlbums.SelectedNode.Text 
-		windowuploadqueue.textUploadDestination.Tag = treeAlbums.SelectedNode.Tag
+		windowuploadqueue.textUploadDestination.Tag = AlbumID.ToString()
 		While OneAlbum.Tag <> "1"
 			OneAlbum = OneAlbum.Parent
 			WindowUploadQueue.textUploadDestination.Text = OneAlbum.Text & "\" & WindowUploadQueue.textUploadDestination.Text
 		End While
 		windowuploadqueue.Show
+		
+		' Wait until the user is finished uploading files, then
+		'   remove this album from the cache so the changes will be
+		'   visible.
+		While WindowUploadQueue.Visible = True
+			Application.DoEvents()
+		End While
+		GalleryClient.ItemCache.RemoveItem(AlbumID)
+		If treeAlbums.SelectedNode.Tag = AlbumID.ToString() Then
+		  TreeAlbumsAfterSelect(sender, new TreeViewEventArgs(TreeAlbums.SelectedNode))			
+		End If
 	End Sub
 	
 Private Function AspectedImage(ByVal ImagePath As String, ByVal HWanted As Integer, ByVal WWanted As Integer) As Image
