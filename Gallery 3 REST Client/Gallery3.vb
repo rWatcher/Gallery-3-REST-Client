@@ -34,6 +34,7 @@ Public Class Gallery3
 		
 		Public Function Count() As Integer
 			' Return the number of items currently in the cache.
+			
 			Return CachedItems.Count
 		End Function ' END Count
 		
@@ -41,6 +42,7 @@ Public Class Gallery3
 			' Retrieve a specific item from the Cache.
 			'   Either returns the cached response as a
 			'   string, or returns "" if it wasn't found.
+			
 			Dim CachedResults = From g3items In CachedItems Where g3items.ItemID = ItemID
 			If CachedResults.Count > 0 Then
 				Return CachedResults(0).QueryResults
@@ -51,6 +53,7 @@ Public Class Gallery3
 		
 		Public Sub RemoveItem (ByVal ItemID As Integer)
 			' Remove an item from the cache (if it exists).
+			
 			Dim counter As Integer = 0
 			While counter < CachedItems.Count
 				If CachedItems(counter).ItemID = ItemID Then
@@ -62,6 +65,7 @@ Public Class Gallery3
 		
 		Public Sub AddItem (ByVal ItemID As Integer, ByVal txtQueryResults As String)
 			'  Add a new item to the cache.
+			
 			RemoveItem (ItemID)
 			Dim NewCachedItem As New Cache.Item
 			NewCachedItem.ItemID = ItemID
@@ -78,20 +82,22 @@ Public Class Gallery3
     	'   and a cache of previously requested items.
         Dim Gallery3URL As String
         Dim Gallery3RESTKey As String
-        Dim ItemCache as New Cache
+        Public Dim ItemCache as New Cache
 
         Public Sub New(ByVal url As String)
         	' When creating a new client, make sure the URL ends with a "/",
         	'   then store it in the global Gallery3URL variable.
+        	
             If Not url.EndsWith("/") Then
                 url = url & "/"
             End If
             Gallery3URL = url
         End Sub ' END New
 
-        Public Function login(ByVal username As String, ByVal password As String) As Boolean
+        Public Function Login(ByVal username As String, ByVal password As String) As Boolean
             ' Log into Gallery with USERNAME/PASSWORD
             '   Returns True if successful, false otherwise.
+            
             Try
                 ' Send login info.
                 Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(Gallery3URL & "rest/"), System.Net.HttpWebRequest)
@@ -119,15 +125,16 @@ Public Class Gallery3
 
             Catch ex As Exception
             	' In the event of an error (such as a bad password, or a server error),
-            	'   display the message and return false
+            	'   display the message and return false.
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Return False
             End Try
         End Function ' END Login
 
-        Public Function login(ByVal RESTAPIKey As String) As Boolean
+        Public Function Login(ByVal RESTAPIKey As String) As Boolean
             ' Login to Gallery using a REST API key.
             '   Returns True if successful, otherwise returns False.
+            
             Try
                 ' Send the login request.
                 Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(Gallery3URL & "rest/item/1/"), System.Net.HttpWebRequest)
@@ -160,12 +167,14 @@ Public Class Gallery3
         Public Function GetItem(ByVal ItemID As Integer) As Linq.JObject
             ' Request the details of a specific item (ItemID).
             '  Returns a Linq.JObject containing the Item, or Nothing.
+            
             Return Me.GetItem(Gallery3URL & "rest/item/" & ItemID.ToString)
         End Function
 
         Public Function GetItem(ByVal ItemURL As String) As Linq.JObject
             ' Request the details of a specific item (ItemID).
             '  Returns a Linq.JObject containing the item, or Nothing.
+            
             Try
             	'  Make sure ItemURL does not end with a "/",
             	'   Fix it if it does.
@@ -285,6 +294,7 @@ Public Class Gallery3
         	' Retrieve the checksum (either md5 of sha1) for the original photo/video on the Gallery server.
         	'   Checksum is returned as a string.
         	'   In the event of an error, an empty string is returned instead.
+        	
             Return GetItemChecksum(Gallery3URL & "rest/itemchecksum_" & ChecksumType.ToLower & "/" & ItemID.ToString)
         End Function ' END GetItemChecksum
 
