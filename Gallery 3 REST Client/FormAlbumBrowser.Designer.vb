@@ -58,6 +58,7 @@ Partial Class FormAlbumBrowser
 		Me.ImageListThumbs = New System.Windows.Forms.ImageList(Me.components)
 		Me.statusGallery = New System.Windows.Forms.StatusStrip
 		Me.labelGalleryStatus = New System.Windows.Forms.ToolStripStatusLabel
+		Me.preferencesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.menuMain.SuspendLayout
 		Me.splitContainer1.Panel1.SuspendLayout
 		Me.splitContainer1.Panel2.SuspendLayout
@@ -76,7 +77,7 @@ Partial Class FormAlbumBrowser
 		'
 		'optionsToolStripMenuItem
 		'
-		Me.optionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.aboutToolStripMenuItem, Me.emptyImageCacheToolStripMenuItem, Me.fullscreenToolStripMenuItem})
+		Me.optionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.aboutToolStripMenuItem, Me.emptyImageCacheToolStripMenuItem, Me.fullscreenToolStripMenuItem, Me.preferencesToolStripMenuItem})
 		Me.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem"
 		Me.optionsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
 		Me.optionsToolStripMenuItem.Text = "Options"
@@ -186,6 +187,13 @@ Partial Class FormAlbumBrowser
 		Me.labelGalleryStatus.Size = New System.Drawing.Size(118, 17)
 		Me.labelGalleryStatus.Text = "toolStripStatusLabel1"
 		'
+		'preferencesToolStripMenuItem
+		'
+		Me.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem"
+		Me.preferencesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+		Me.preferencesToolStripMenuItem.Text = "Preferences..."
+		AddHandler Me.preferencesToolStripMenuItem.Click, AddressOf Me.PreferencesToolStripMenuItemClick
+		'
 		'FormAlbumBrowser
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
@@ -209,6 +217,7 @@ Partial Class FormAlbumBrowser
 		Me.ResumeLayout(false)
 		Me.PerformLayout
 	End Sub
+	Private preferencesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Private fullscreenToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Private emptyImageCacheToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Private aboutToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem

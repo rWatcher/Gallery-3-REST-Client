@@ -419,4 +419,11 @@ Public Partial Class FormAlbumBrowser
             Me.WindowState = FormWindowState.Normal
         End If
 	End Sub ' END FullscreenToolStripMenuItemClick
+	
+	Sub PreferencesToolStripMenuItemClick(sender As Object, e As EventArgs)
+		' Display the preferences window
+		
+		Dim WindowPreferences As New FormPreferences
+		WindowPreferences.Show()
+	End Sub ' END PreferencesToolStripMenuItemClick
 End Class ' EndFormAlbumBrowser
