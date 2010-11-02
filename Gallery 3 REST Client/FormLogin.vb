@@ -26,14 +26,25 @@ Public Partial Class FormLogin
 	End Sub
 	
 	Sub ButtonLoginClick(sender As Object, e As EventArgs)
+		' Login to the remote Gallery with the provided information.
+		'   If successful, open the album browser window.
+		'   If not, display an error, and wait exit the sub so the 
+		'   user can fix it.
+		
+		' Make sure a URL was provided.
 		If txtGalleryURL.Text = "" Then
             MessageBox.Show("Please specify a URL", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Exit Sub
         End If
+        
+        ' Make sure either a username/password combo is present, or a rest key is present.
         If (txtUsername.Text = "" Or txtPassword.Text = "") And (txtRESTKey.Text = "") Then
             MessageBox.Show("Please specify a User Name/Password or REST Key", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Exit Sub
         End If
+        
+        ' Create a new Gallery 3 Client instance and attempt to log in.
+        '  Exit the sub on error.
         Dim galleryClient As New Gallery3.Client(txtGalleryURL.Text)
         statusLabelLogin.Text = "Connecting to Server"
         Application.DoEvents()
@@ -48,6 +59,9 @@ Public Partial Class FormLogin
                 Exit Sub
             End If
         End If
+        
+        ' Login was successful, open up the album window and connect it to the 
+        '   existing Gallery Client instance.
         statusLabelLogin.Text = "Login Successful, Downloading Root Album Data"
         Application.DoEvents()
         Dim GalleryAlbumWindow As New formAlbumBrowser
@@ -55,10 +69,11 @@ Public Partial Class FormLogin
         GalleryAlbumWindow.Text = "Connected to " & txtGalleryURL.Text.Replace("http://", "")
         Me.Hide()
         GalleryAlbumWindow.Show()
-        'Me.Close()
+        
+        ' Wait until the album window is closed before exiting.
         While GalleryAlbumWindow.Visible = True
         	application.DoEvents()
         End While
         Me.Close()
-	End Sub
-End Class
+	End Sub ' END ButtonLoginClick
+End Class ' END FormLogin
