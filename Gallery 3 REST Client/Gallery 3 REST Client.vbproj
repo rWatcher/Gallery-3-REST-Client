@@ -99,62 +99,85 @@
     <Import Include="System.Windows.Forms" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
-    <Compile Include="ClassFileUpload.vb" />
     <Compile Include="FormAbout.Designer.vb">
       <DependentUpon>FormAbout.vb</DependentUpon>
     </Compile>
-    <Compile Include="FormAbout.vb" />
+    <Compile Include="FormAbout.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormAlbumBrowser.Designer.vb">
       <DependentUpon>FormAlbumBrowser.vb</DependentUpon>
     </Compile>
-    <Compile Include="FormAlbumBrowser.vb" />
+    <Compile Include="FormAlbumBrowser.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormChecksums.Designer.vb">
       <DependentUpon>FormChecksums.vb</DependentUpon>
     </Compile>
-    <Compile Include="FormChecksums.vb" />
+    <Compile Include="FormChecksums.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormDownload.Designer.vb">
       <DependentUpon>FormDownload.vb</DependentUpon>
     </Compile>
-    <Compile Include="FormDownload.vb" />
+    <Compile Include="FormDownload.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormLogin.Designer.vb">
       <DependentUpon>FormLogin.vb</DependentUpon>
     </Compile>
-    <Compile Include="FormLogin.vb" />
+    <Compile Include="FormLogin.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormUploadQueue.Designer.vb">
       <DependentUpon>FormUploadQueue.vb</DependentUpon>
     </Compile>
-    <Compile Include="FormUploadQueue.vb" />
+    <Compile Include="FormUploadQueue.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormViewPicture.Designer.vb">
       <DependentUpon>FormViewPicture.vb</DependentUpon>
     </Compile>
-    <Compile Include="FormViewPicture.vb" />
+    <Compile Include="FormViewPicture.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="FormAbout.resx">
       <DependentUpon>FormAbout.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormAlbumBrowser.resx">
       <DependentUpon>FormAlbumBrowser.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormChecksums.resx">
       <DependentUpon>FormChecksums.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormDownload.resx">
       <DependentUpon>FormDownload.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormLogin.resx">
       <DependentUpon>FormLogin.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormUploadQueue.resx">
       <DependentUpon>FormUploadQueue.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormViewPicture.resx">
       <DependentUpon>FormViewPicture.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="default.png" />
     <None Include="gallery.ico" />
     <None Include="logo.png" />
+    <ProjectReference Include="..\GalleryLib\GalleryLib.vbproj">
+      <Project>{B32C3E8A-A17E-4EC3-9229-7241E84B7202}</Project>
+      <Name>GalleryLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Gallery3.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

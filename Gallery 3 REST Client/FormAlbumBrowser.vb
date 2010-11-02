@@ -16,9 +16,12 @@
 '  Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
 '
 Imports Newtonsoft.Json
+Imports GalleryLib.GalleryLib
+
 
 Public Partial Class FormAlbumBrowser
-	Public GalleryClient As Gallery3.Client
+	
+    Public GalleryClient As Gallery3.Client
 
 	Public Sub New()
 		' The Me.InitializeComponent call is required for Windows Forms designer support.
