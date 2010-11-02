@@ -1,0 +1,12 @@
+Project Output
+ - Gallery 3 REST Client.exe
+ - GalleryLib.dll
+ - Newtonsoft.Json.dll
+
+Extra Files
+ - default.png
+ - gallery.ico
+ - gpl-2.0.txt
+
+Optional:
+ - cache/
