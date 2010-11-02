@@ -10,7 +10,7 @@
 '  WITHOUT ANY WARRANTY; without even the implied warranty of
 '  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 '  General Public License for more details.
-' 
+'
 '  You should have received a copy of the GNU General Public License
 '  along with this program; if not, write to the Free Software
 '  Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
@@ -30,60 +30,91 @@ Public Partial Class FormAlbumBrowser
 	End Sub
 	
 	Sub FormAlbumBrowserLoad(sender As Object, e As EventArgs)
-		' Download the details of Item #1 (basically the name of the root album), and load into treeAlbums.
+		' Handles initialing loading the album window.
+		'   Download details of Item #1 (the root album)
+		'   and all of its member items, also handle initial
+		'   setup of the form.
+		
+		' Display a status message and run DoEvents
+		'  to make sure the message is displayed.
         labelGalleryStatus.Text = "Loading Albums"
         Application.DoEvents()
-
+        
+        ' Attempt to download the details of the root Gallery album.
         Dim rootNode As New TreeNode
         Dim RootItem As Linq.JObject = GalleryClient.GetItem(1)
-
+        
+        ' In the event of an error, ask the user if they want to try again or quit.
+        While RootItem Is Nothing
+        	If MessageBox.Show ("Unable to access root album, try again?", "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error) = DialogResult.No Then
+        		Me.Close()
+        		Exit Sub
+        	End If
+        	RootItem = GalleryClient.GetItem(1)
+        End While
+        
+        ' If itemchecksums isn't present in the root album data,
+        '   assume the module is not installed remotely and disable
+        '   the menu option for the file comparison feature.
         If RootItem("relationships").Item("itemchecksums") Is Nothing Then
             CompareToLocalFolderToolStripMenuItem.Enabled = False
         End If
-
-        If Not RootItem Is Nothing Then
-            rootNode.Text = RootItem("entity").Item("title").ToString.Replace("""", "")
-            rootNode.Tag = RootItem("entity").Item("id").ToString.Replace("""", "")
-        End If
+        
+        ' Add the root album to treeAlbums.
+        rootNode.Text = RootItem("entity").Item("title").ToString.Replace("""", "")
+        rootNode.Tag = RootItem("entity").Item("id").ToString.Replace("""", "")
         treeAlbums.Nodes.Add(rootNode)
         treeAlbums.ExpandAll()
-
+        
+        ' Set the status to Ready.
         labelGalleryStatus.Text = "Ready"
-	End Sub
+	End Sub ' END FormAlbumBrowserLoad
 	
 	Sub TreeAlbumsAfterSelect(sender As Object, e As TreeViewEventArgs)
         ' Download the details of the currently selected album.
         '   Loop through each "member" item and load into the form.
+        
+        ' Change the status, and reset listPictures and ImageListThumbs
+        '   before loading the new album.
         labelGalleryStatus.Text = "Loading Contents of " & treeAlbums.SelectedNode.Text
-
         Application.DoEvents()
         listPictures.Items.Clear()
         ImageListThumbs.Images.Clear()
-
+        
+        ' Get the details on the newly selected item,
+        '  In the event of an error, exit the sub.
         Dim SelectedAlbumID = treeAlbums.SelectedNode.Tag
         Dim SelectedAlbum As Linq.JObject = GalleryClient.GetItem(Convert.ToInt32(treeAlbums.SelectedNode.Tag))
         If SelectedAlbum Is Nothing Then
         	Exit Sub
         End If
+        
+        ' Download detailed info on all the items in the selected album
         Dim ChildItems As List(Of String) = GalleryClient.GetItems(SelectedAlbum("members"))
 
         If Not ChildItems Is Nothing Then
-            'Dim DefaultFileThumbImage As System.Drawing.Image = Image.FromFile(Application.StartupPath & "\default.png")
-            'ImageListThumbs.Images.Add(0, DefaultFileThumbImage)
-                        ImageListThumbs.Images.Add(0, AspectedImage(Application.StartupPath & "\default.png", 64,64))
-                        'OneItemView.ImageKey = OneItemView.Tag
-
+        	' Add a default thumb to ImageListThumbs to be displayed
+        	'  while the actual thumbs are downloading, or in the event
+        	'  of a download error.
+        	ImageListThumbs.Images.Add(0, AspectedImage(Application.StartupPath & "\default.png", 64,64))
+        	
+        	' Loop through each item in the current album and add to the corresponding control.
             Dim OneChild As String
             Dim counter As Integer = 1
             For Each OneChild In ChildItems
+            	
+            	' Get the details for the current item and set the status.
                 labelGalleryStatus.Text = "Loading Contents of " & treeAlbums.SelectedNode.Text & " (" & counter.ToString & " of " & SelectedAlbum("members").Count.ToString & ")"
                 Dim OneChildData As Linq.JObject = Linq.JObject.Parse(OneChild)
+                
+                ' If it's an album, add it to treeAlbums
                 If (OneChildData("entity").Item("type").ToString = """album""") Then
-                    ' Display albums in the treeAlbums object.
                     Dim SubAlbumTree As New TreeNode
                     SubAlbumTree.Text = OneChildData("entity").Item("title").ToString.Replace("""", "")
                     SubAlbumTree.Tag = OneChildData("entity").Item("id").ToString.Replace("""", "")
                     Dim SearchTree As New TreeNode
+                    
+                    ' Make sure the album isn't already in treeAlbums before adding it.
                     Dim NodeLoaded As Boolean = False
                     For Each SearchTree In treeAlbums.SelectedNode.Nodes
                         If SearchTree.Tag = SubAlbumTree.Tag Then
@@ -91,16 +122,22 @@ Public Partial Class FormAlbumBrowser
                             Exit For
                         End If
                     Next
+                    
+                    ' If the user clicks into another album while this one is still loading, abort.
+                    '  or else, load the album (if it doesn't already exist).
                     If treeAlbums.SelectedNode.Tag = SelectedAlbumID And NodeLoaded = False Then
                         treeAlbums.SelectedNode.Nodes.Add(SubAlbumTree)
                         treeAlbums.ExpandAll()
                     End If
                 Else
+                	
                     ' Display everything that's not an album in the listPictures object.
                     Dim oneChildViewItem As New ListViewItem
                     oneChildViewItem.Text = OneChildData("entity").Item("title").ToString.Replace("""", "")
                     oneChildViewItem.Tag = OneChildData("entity").Item("id").ToString.Replace("""", "")
-                    ' Unable to find / download thumb, load a default.png image instead.
+                    
+                    ' Load the item onto listPictures with the default thumbnail (for now)
+                    '  unless the user clicked into another album already.
                     oneChildViewItem.ImageKey = 0
                     If treeAlbums.SelectedNode.Tag = SelectedAlbumID Then
                         listPictures.Items.Add(oneChildViewItem)
@@ -108,22 +145,34 @@ Public Partial Class FormAlbumBrowser
                         Exit Sub
                     End If
                 End If
-
+                
+                ' Increase the counter and move onto the next item.
                 counter = counter + 1
                 Application.DoEvents()
             Next
-
-
+            
+            ' Once the items are all loaded, load the thumbnails.
+            '  We do this seperately, because downloading thumbnails
+            '  can take a lot longer then the rest of the album load.
+            '  this way the user can see everything in the album right
+            '  away, and click on stuff while the thumbs load.
+            
+            ' Set teh status, and reset the counter before looping through listPictures.
             labelGalleryStatus.Text = "Loading Thumbnails"
             Dim OneItemView As ListViewItem
+            counter = 1
             For Each OneItemView In listPictures.Items
+                labelGalleryStatus.Text = "Loading Thumbnails (" & counter.ToString & " of " & listPictures.Items.Count.ToString() & ")"
+                
+                ' Figure out what the file name for the thumbnail should be, and retrieve the details for this item.
                 Dim strFileThumbPath As String = Application.StartupPath & "\cache\" & OneItemView.Tag & "_thumb"
                 Dim OneChildData As Linq.JObject = GalleryClient.GetItem(Convert.ToInt32(OneItemView.Tag))
-
+                
+                ' If the thumbnail is already downloaded into the cache, and the album selection hasn't
+                '   changed, then load it, or else download the thumbnail and display it.
+                '   If the selected album has changed, abort.
                 If System.IO.File.Exists(strFileThumbPath) Then
                     If treeAlbums.SelectedNode.Tag = SelectedAlbumID Then
-                        'Dim FileThumbImage As System.Drawing.Image = Image.FromFile(strFileThumbPath)
-                        'ImageListThumbs.Images.Add(OneItemView.Tag, FileThumbImage)
                         ImageListThumbs.Images.Add(OneItemView.Tag, AspectedImage(strFileThumbPath, 64,64))
                         OneItemView.ImageKey = OneItemView.Tag
                     Else
@@ -131,44 +180,48 @@ Public Partial Class FormAlbumBrowser
                     End If
                 ElseIf GalleryClient.DownloadFile(OneChildData("entity").Item("thumb_url"), strFileThumbPath) Then
                     If treeAlbums.SelectedNode.Tag = SelectedAlbumID Then
-                        'Dim FileThumbImage As System.Drawing.Image = Image.FromFile(strFileThumbPath)
-                        'ImageListThumbs.Images.Add(OneItemView.Tag, FileThumbImage)
                         ImageListThumbs.Images.Add(OneItemView.Tag, AspectedImage(strFileThumbPath, 64,64))
                         OneItemView.ImageKey = OneItemView.Tag
                     Else
                         Exit Sub
                     End If
                 End If
+                counter = counter + 1
                 Application.DoEvents()
             Next
         End If
-
-
-
+        
+        ' Set the status back to ready before exiting.
         labelGalleryStatus.Text = "Ready"
-	End Sub
+	End Sub ' END TreeAlbumsAfterSelect
 	
 	Sub ListPicturesSelectedDoubleClick(sender As Object, e As EventArgs)
+		' This function is called when a photo/video is double clicked.
+		'   Either display the picture, or ask the user if they'd like to
+		'   download the video.
+		
+		' Make sure something is selected, then download the details for that item.
         If listPictures.SelectedItems.Count > 0 Then
+        	labelGalleryStatus.Text = "Loading Item..."
             Dim selectedItem As Linq.JObject = GalleryClient.GetItem(Convert.ToInt32(listPictures.SelectedItems(0).Tag))
-
+            
+            ' If the item is a photo, download the resize and display it.
             If selectedItem("entity").Item("type").ToString = """photo""" Then
             	labelGalleryStatus.Text = "Loading Image..."
+            	
+            	' Check to see if the resize already exists in the cache,
+            	'   if it does, display it, or else download and display it.
                 Dim strFileResizePath As String = Application.StartupPath & "\cache\" & listPictures.SelectedItems(0).Tag & "_resize"
                 If System.IO.File.Exists(strFileResizePath) Then
                     Dim WindowViewResize As New formViewPicture
                     WindowViewResize.PictureResize.Image = System.Drawing.Image.FromFile(strFileResizePath)
                     WindowViewResize.Tag = listPictures.SelectedItems(0).Tag
-                    'WindowViewResize.Height = WindowViewResize.PictureResize.Height
-                    'WindowViewResize.Width = WindowViewResize.PictureResize.Width
                     WindowViewResize.Text = listPictures.SelectedItems(0).Text
                     WindowViewResize.Show()
                 ElseIf GalleryClient.DownloadFile(selectedItem("entity").Item("resize_url"), strFileResizePath) Then
                     Dim WindowViewResize As New formViewPicture
                     WindowViewResize.PictureResize.Image = System.Drawing.Image.FromFile(strFileResizePath)
                     WindowViewResize.Tag = listPictures.SelectedItems(0).Tag
-                    'WindowViewResize.Height = WindowViewResize.PictureResize.Height
-                    'WindowViewResize.Width = WindowViewResize.PictureResize.Width
                     WindowViewResize.Text = listPictures.SelectedItems(0).Text
                     WindowViewResize.Show()
                 Else
@@ -176,13 +229,12 @@ Public Partial Class FormAlbumBrowser
                     Dim WindowViewResize As New formViewPicture
                     WindowViewResize.PictureResize.Image = System.Drawing.Image.FromFile(Application.StartupPath & "\default.png")
                     WindowViewResize.Tag = listPictures.SelectedItems(0).Tag
-                    'WindowViewResize.Height = WindowViewResize.PictureResize.Height
-                    'WindowViewResize.Width = WindowViewResize.PictureResize.Width
                     WindowViewResize.Text = listPictures.SelectedItems(0).Text
                     WindowViewResize.Show()
                 End If
-                labelGalleryStatus.Text = "Ready"
+
             ElseIf selectedItem("entity").Item("type").ToString = """movie""" Then
+            	' If the item is a movie, ask if the user wants to download it.
                 If MessageBox.Show("Movie viewing is not available at this time, would you like to download the file instead?", "Unsupported File Type", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
                     Dim SaveMovieAsDialog As New SaveFileDialog
                     SaveMovieAsDialog.FileName = selectedItem("entity").Item("name")
@@ -198,53 +250,79 @@ Public Partial Class FormAlbumBrowser
                     End If
                 End If
             Else
+            	' This should never happen, but just in case the item isn't a photo or movie, display an error.
                 MessageBox.Show("Viewing " & selectedItem("entity").Item("type").ToString & " is not available at this time", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
         End If
-	End Sub
+        
+        ' Set the status back to ready.
+        labelGalleryStatus.Text = "Ready"
+	End Sub ' END ListPicturesSelectedDoubleClick
 	
 	Sub CompareToLocalFolderToolStripMenuItemClick(sender As Object, e As EventArgs)
+		' Compare the contents of a local folder to the contents of a remote album.
+		'   Use file names to look for missing items, and checksums to look for
+		'   anything that's been modified or damaged.
+		
+		' Ask the user for the location of the folder to compare to.
 		Dim LocalFolder As New FolderBrowserDialog
         If LocalFolder.ShowDialog = Windows.Forms.DialogResult.OK Then
         	Me.Cursor = Cursors.WaitCursor
-
+        	
+        	' Create a new Window.  Load GalleryClient, the selected folder,
+        	'   and the current selected album into it.
             Dim checksumWindow As New formChecksums
             checksumWindow.GalleryClient = GalleryClient
             checksumWindow.txtLocalFolder.Text = LocalFolder.SelectedPath
             checksumWindow.txtRemoteAlbum.Text = treeAlbums.SelectedNode.Text
             checksumWindow.txtRemoteAlbum.Tag = treeAlbums.SelectedNode.Tag
 			Dim OneAlbum As TreeNode = treeAlbums.SelectedNode
+			
+			' Generate a full path to the current album to display instead of 
+			'   just the album name.
 			While OneAlbum.Tag <> "1"
 				OneAlbum = OneAlbum.Parent
 				checksumWindow.txtRemoteAlbum.Text = OneAlbum.Text & "\" & checksumWindow.txtRemoteAlbum.Text
 			End While
+			
+			' Show the window, and run DoEvents.
             checksumWindow.Show()
             Application.DoEvents()
-
+            
+            ' Load the local and remote file lists, then generate checksums and compare.
             checksumWindow.statusCompare.Text = "Loading Local File List"
             checksumWindow.LoadLocalFileList()
             checksumWindow.statusCompare.Text = "Loading Remote File List"
             checksumWindow.LoadAlbumFileList()
             checksumWindow.statusCompare.Text = "Generating Checksums"
             checksumWindow.CompareFiles()
+            
+            ' Set the status text and turn control back over to the user.
             checksumWindow.statusCompare.Text = "Files that didn't match have been bolded."
-        Me.Cursor = Cursors.Default
-
+            Me.Cursor = Cursors.Default
         End If
-	End Sub
+	End Sub ' END CompareToLocalFolderToolStripMenuItemClick
 	
 	Sub UploadFilesToolStripMenuItemClick(sender As Object, e As EventArgs)
-		Dim OneAlbum As TreeNode = treeAlbums.SelectedNode
-		Dim WindowUploadQueue As New FormUploadQueue 
+		' Create a new upload queue window, when it closes refresh the album contents.
+		
+		' Create the new window, load GalleryClient into it and
+		'   Set the upload destination to the current album.
+		Dim WindowUploadQueue As New FormUploadQueue
 		Dim AlbumID as Integer = Convert.ToInt32(treeAlbums.SelectedNode.Tag)
 		WindowUploadQueue.GalleryClient = GalleryClient
-		WindowUploadQueue.textUploadDestination.Text = treeAlbums.SelectedNode.Text 
-		windowuploadqueue.textUploadDestination.Tag = AlbumID.ToString()
+		WindowUploadQueue.textUploadDestination.Tag = AlbumID.ToString()
+		
+		' Use the full path to the album instead of just it's name.
+		WindowUploadQueue.textUploadDestination.Text = treeAlbums.SelectedNode.Text
+		Dim OneAlbum As TreeNode = treeAlbums.SelectedNode
 		While OneAlbum.Tag <> "1"
 			OneAlbum = OneAlbum.Parent
 			WindowUploadQueue.textUploadDestination.Text = OneAlbum.Text & "\" & WindowUploadQueue.textUploadDestination.Text
 		End While
-		windowuploadqueue.Show
+		
+		' Display the window.
+		WindowUploadQueue.Show()
 		
 		' Wait until the user is finished uploading files, then
 		'   remove this album from the cache so the changes will be
@@ -253,13 +331,16 @@ Public Partial Class FormAlbumBrowser
 			Application.DoEvents()
 		End While
 		GalleryClient.ItemCache.RemoveItem(AlbumID)
+		
+		' If the album selection hasn't changed, reload it to display the new uploads.
 		If treeAlbums.SelectedNode.Tag = AlbumID.ToString() Then
-		  TreeAlbumsAfterSelect(sender, new TreeViewEventArgs(TreeAlbums.SelectedNode))			
+		  TreeAlbumsAfterSelect(sender, new TreeViewEventArgs(TreeAlbums.SelectedNode))
 		End If
-	End Sub
+	End Sub ' END UploadFilesToolStripMenuItemClick
 	
-Private Function AspectedImage(ByVal ImagePath As String, ByVal HWanted As Integer, ByVal WWanted As Integer) As Image
-'http://www.windowsdevelop.com/windows-forms-general/vb-imagelist-control-maintaining-aspect-ratio-7247.shtml
+	Private Function AspectedImage(ByVal ImagePath As String, ByVal HWanted As Integer, ByVal WWanted As Integer) As Image
+		' This function loads the thumbnails with their correct aspect ratio.
+		'   Credit: http://www.windowsdevelop.com/windows-forms-general/vb-imagelist-control-maintaining-aspect-ratio-7247.shtml
         Dim myBitmap, WhiteSpace As System.Drawing.Bitmap
         Dim myGraphics As Graphics
         Dim myDestination As Rectangle
@@ -290,11 +371,12 @@ Private Function AspectedImage(ByVal ImagePath As String, ByVal HWanted As Integ
         myGraphics.DrawImage(image:=myBitmap, rect:=myDestination)
 
         AspectedImage = WhiteSpace
-
-    End Function
+    End Function ' END AspectedImage
 
 	Sub AboutToolStripMenuItemClick(sender As Object, e As EventArgs)
+		' Display the About window.
+		
 		Dim WindowAbout As New FormAbout
 		WindowAbout.Show()
-	End Sub
-End Class
+	End Sub ' END AboutToolStripMenuItemClick
+End Class ' EndFormAlbumBrowser
