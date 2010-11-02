@@ -4,3 +4,5 @@ tmp
 *.swp
 Gallery 3 REST Client/bin/
 Gallery 3 REST Client/obj/
+GalleryLib/bin/
+GalleryLib/obj/
