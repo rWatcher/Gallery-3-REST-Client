@@ -28,10 +28,12 @@ Class ClassFileUpload
 	Public Shared strServerResponse As String = ""
 	
 	Shared Function Upload(ByVal url As String, ByVal FileToUpload As String, ByVal Gallery3RESTKey As String) As Boolean
-		' Set up a thread to upload a file.
+		' Upload the specified file.
+		'   Returns true if successful, otherwise false.
 		
 		Try
-			' Set the global variables that will be accessed by the thread.
+			' Set the starting values for the global 
+			'   variables that will be accessed by the thread.
 			strServerResponse = ""
 			UploadFileName = FileToUpload
 			
@@ -127,14 +129,18 @@ Class ClassFileUpload
 
     Private Shared Sub GetResponseCallback(ByVal asynchronousResult As IAsyncResult)
     	' Get's the response from the file upload and stores it in strServerResponse.
+
     	Try
+    		' Set up the response connection.
     		Dim request As HttpWebRequest = CType(asynchronousResult.AsyncState, HttpWebRequest)
     		Dim response As HttpWebResponse = CType(request.EndGetResponse(asynchronousResult), HttpWebResponse)
     		Dim streamResponse As Stream = response.GetResponseStream()
     		Dim streamRead As New StreamReader(streamResponse)
     		
+    		' Retrieve the server response and store in a global variable.
     		strServerResponse = streamRead.ReadToEnd()
     		
+    		' Close out the objects and exit.
     		streamResponse.Close()
     		streamRead.Close()
     		response.Close()
