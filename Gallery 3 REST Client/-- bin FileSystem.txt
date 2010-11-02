@@ -7,6 +7,8 @@ Extra Files
  - default.png
  - gallery.ico
  - gpl-2.0.txt
+ - config.xml
+ - config.xsd
 
 Optional:
  - cache/

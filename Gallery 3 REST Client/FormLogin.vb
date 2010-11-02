@@ -66,7 +66,30 @@ Public Partial Class FormLogin
             End If
         End If
         
-        ' Login was successful, open up the album window and connect it to the
+        ' Login Was Successful.
+        
+        ' Load the config file.
+        Dim results() As DataRow
+        Dim g3Prefs As New DataSet
+        g3Prefs.ReadXmlSchema(Application.StartupPath & "\config.xsd")
+        g3Prefs.ReadXml(strDataFolder & "\config.xml")
+
+        ' If the checkbox was checked, save URL and REST Key
+        If checkSaveLoginDetails.Checked = True Then
+        	results = g3Prefs.Tables(0).Select("ConfigName = 'G3URL'")
+        	results(0).Item(1) = txtGalleryURL.Text
+        	results = g3Prefs.Tables(0).Select("ConfigName = 'G3RESTKey'")
+        	results(0).Item(1) = galleryClient.GetRESTKey()          	
+        End If
+        
+        ' Save Login seperately so we remember if it was unchecked.
+        results = g3Prefs.Tables(0).Select("ConfigName = 'SaveLogin'")
+        results(0).Item(1) = checkSaveLoginDetails.Checked
+        
+        ' Save the updated config data to the file.
+        g3Prefs.WriteXml(strDataFolder & "\config.xml")
+
+        ' Open up the album window and connect it to the
         '   existing Gallery Client instance.
         statusLabelLogin.Text = "Login Successful, Downloading Root Album Data"
         Application.DoEvents()
@@ -98,5 +121,20 @@ Public Partial Class FormLogin
 		If Not System.IO.Directory.Exists (strDataFolder & "\cache") Then
 			System.IO.Directory.CreateDirectory (strDataFolder & "\cache")
 		End If
+		If Not System.IO.File.Exists (strDataFolder & "\config.xml") Then
+			System.IO.File.Copy (Application.StartupPath & "\config.xml", strDataFolder & "\config.xml")
+		End If
+		
+		' Load login details from the config file.
+        Dim results() As DataRow
+        Dim g3Prefs As New DataSet
+        g3Prefs.ReadXmlSchema(Application.StartupPath & "\config.xsd")
+        g3Prefs.ReadXml(strDataFolder & "\config.xml")
+        results = g3Prefs.Tables(0).Select("ConfigName = 'G3URL'")
+        txtGalleryURL.Text = results(0).Item(1).ToString
+        results = g3Prefs.Tables(0).Select("ConfigName = 'G3RESTKey'")
+        txtRESTKey.Text = results(0).Item(1).ToString		
+        results = g3Prefs.Tables(0).Select("ConfigName = 'SaveLogin'")
+        checkSaveLoginDetails.Checked = results(0).Item(1).ToString		
 	End Sub ' END FormLoginLoad
 End Class ' END FormLogin

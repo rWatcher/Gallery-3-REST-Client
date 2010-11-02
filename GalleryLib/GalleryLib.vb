@@ -94,7 +94,14 @@ Public Class Gallery3
             End If
             Gallery3URL = url
         End Sub ' END New
-
+        
+        Public Function GetRESTKey() As String
+        	' Returns the value of Gallery3RESTKey.
+        	'  Used by the main app to save the key to the config file.
+        	
+        	Return Gallery3RESTKey
+        End Function ' END GetRESTKey
+        
         Public Function Login(ByVal username As String, ByVal password As String) As Boolean
             ' Log into Gallery with USERNAME/PASSWORD
             '   Returns True if successful, false otherwise.

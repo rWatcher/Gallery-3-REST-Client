@@ -59,6 +59,7 @@ Partial Class FormLogin
 		Me.statusStripLogin = New System.Windows.Forms.StatusStrip
 		Me.statusLabelLogin = New System.Windows.Forms.ToolStripStatusLabel
 		Me.buttonLogin = New System.Windows.Forms.Button
+		Me.checkSaveLoginDetails = New System.Windows.Forms.CheckBox
 		CType(Me.pictureGalleryLogo,System.ComponentModel.ISupportInitialize).BeginInit
 		Me.groupBoxURL.SuspendLayout
 		Me.groupBoxLogin.SuspendLayout
@@ -204,10 +205,20 @@ Partial Class FormLogin
 		Me.buttonLogin.Location = New System.Drawing.Point(322, 346)
 		Me.buttonLogin.Name = "buttonLogin"
 		Me.buttonLogin.Size = New System.Drawing.Size(75, 23)
-		Me.buttonLogin.TabIndex = 5
+		Me.buttonLogin.TabIndex = 6
 		Me.buttonLogin.Text = "Login"
 		Me.buttonLogin.UseVisualStyleBackColor = true
 		AddHandler Me.buttonLogin.Click, AddressOf Me.ButtonLoginClick
+		'
+		'checkSaveLoginDetails
+		'
+		Me.checkSaveLoginDetails.AutoSize = true
+		Me.checkSaveLoginDetails.Location = New System.Drawing.Point(36, 350)
+		Me.checkSaveLoginDetails.Name = "checkSaveLoginDetails"
+		Me.checkSaveLoginDetails.Size = New System.Drawing.Size(157, 17)
+		Me.checkSaveLoginDetails.TabIndex = 5
+		Me.checkSaveLoginDetails.Text = "Remember These Settings?"
+		Me.checkSaveLoginDetails.UseVisualStyleBackColor = true
 		'
 		'FormLogin
 		'
@@ -215,6 +226,7 @@ Partial Class FormLogin
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.ClientSize = New System.Drawing.Size(438, 407)
+		Me.Controls.Add(Me.checkSaveLoginDetails)
 		Me.Controls.Add(Me.buttonLogin)
 		Me.Controls.Add(Me.statusStripLogin)
 		Me.Controls.Add(Me.groupBoxLogin)
@@ -239,6 +251,7 @@ Partial Class FormLogin
 		Me.ResumeLayout(false)
 		Me.PerformLayout
 	End Sub
+	Private checkSaveLoginDetails As System.Windows.Forms.CheckBox
 	Private buttonLogin As System.Windows.Forms.Button
 	Private statusLabelLogin As System.Windows.Forms.ToolStripStatusLabel
 	Private statusStripLogin As System.Windows.Forms.StatusStrip

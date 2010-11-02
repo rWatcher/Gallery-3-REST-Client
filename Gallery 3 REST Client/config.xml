@@ -1,0 +1,19 @@
+<?xml version="1.0" standalone="yes" ?>
+<Configurations xmlns="config.xsd">
+	<config>
+		<ConfigName>G3URL</ConfigName>
+		<ConfigValue>http://www.example.com/gallery3/index.php</ConfigValue>
+	</config>
+	<config>
+		<ConfigName>G3RESTKey</ConfigName>
+		<ConfigValue></ConfigValue>
+	</config>
+	<config>
+		<ConfigName>SaveLogin</ConfigName>
+		<ConfigValue>True</ConfigValue>
+	</config>
+	<config>
+		<ConfigName>EmptyCache</ConfigName>
+		<ConfigValue>True</ConfigValue>
+	</config>
+</Configurations>
