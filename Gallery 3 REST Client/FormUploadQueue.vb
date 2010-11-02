@@ -28,14 +28,19 @@ Public Partial Class FormUploadQueue
 		' TODO : Add constructor code after InitializeComponents
 		'
 	End Sub
-	
-	Sub FormUploadQueueLoad(sender As Object, e As EventArgs)
-	End Sub
-	
+		
 	Sub ButtonAddToQueueClick(sender As Object, e As EventArgs)
+		'  Add files to the upload queue.
+		
+		' Display a file selection dialog.
 		Dim FilesToUpload As New OpenFileDialog
-		filestoupload.Multiselect = true
-		If filestoupload.ShowDialog = Windows.Forms.DialogResult.OK Then
+		FilesToUpload.Multiselect = True
+		FilesToUpload.Filter = "Images (*.jpg; *.jpeg; *.png; *.gif)|*.JPG;*.JPEG;*.PNG;*.GIF|Movies (*.flv; *.mp4; *.m4v)|*.FLV;*.MP4;*.M4V"
+		If FilesToUpload.ShowDialog = Windows.Forms.DialogResult.OK Then
+			
+			' Loop through each selected file, adding them to the queue.
+			'   Display just the file name, but store the full name and path
+			'   in the tag.
 			Dim oneFile As String
 			For Each oneFile In FilesToUpload.FileNames
 				Dim NewQueueItem As New ListViewItem
@@ -45,29 +50,44 @@ Public Partial Class FormUploadQueue
 				listUploadQueue.Items.Add (NewQueueItem)
 			Next
 		End If
-	End Sub
+	End Sub ' END ButtonAddToQueueClick
 	
 	Sub ButtonUploadClick(sender As Object, e As EventArgs)
+		' Upload each file in the queue to the remote Gallery.
+		
+		' Retrieve the details for the album that the files are being uploaded to.
+		'   On error, exit.
         Dim AlbumInfo As Linq.JObject = GalleryClient.GetItem(Convert.ToInt32(textUploadDestination.Tag))
         If AlbumInfo Is Nothing Then
         	MessageBox.Show ("Error Retriving Album Details, Upload Aborted.", "Error",  MessageBoxButtons.OK, MessageBoxIcon.Error)
         	Exit Sub
         End If
         
+        ' Disable a few buttons and make the window look busy.
+        '   Also, set up the progress bar to track how many files have been uploaded.
         buttonUpload.Enabled = False
         buttonAddToQueue.Enabled = False
         Me.Cursor = Cursors.WaitCursor
-        
-		Dim OneQueueItem As ListViewItem
 		progressUpload.Value = 0
 		progressUpload.Maximum = listUploadQueue.Items.Count
+        
+        ' Loop through each item in the queue, and upload them one at a time.
+		Dim OneQueueItem As ListViewItem
 		For Each OneQueueItem In listUploadQueue.Items
+			
+			' If SubItems is more then one, then an upload attempt was already run.
+			'   If the upload status is "Failed" then try and upload it again, 
+			'   or else skip it.
 			If OneQueueItem.SubItems.Count > 1 Then
 				If OneQueueItem.SubItems(1).Text = "Failed" Then
 					OneQueueItem.SubItems.RemoveAt (1) 
 				End If
 			End If
 			If OneQueueItem.SubItems.Count = 1 Then
+				
+				' Set the upload status to "Uploading" and upload the file.
+				'   Once the upload function exits, set the status to either
+				'   Complete or Failed, accordingly.
 				Dim OneQueueStatus As New ListViewItem.ListViewSubItem
 				OneQUeueStatus.Text = "Uploading..."
 				OneQueueItem.SubItems.Add(OneQueueStatus)
@@ -78,11 +98,16 @@ Public Partial Class FormUploadQueue
 					OneQueueStatus.Text = "Failed"
 				End If
 			End If
+			
+			' Update the progress bar and run DoEvents before moving onto
+			'   the next item.
 			progressUpload.Value = progressUpload.Value + 1
 			Application.DoEvents()
 		Next
+		
+		' Once everything's been uploaded, enable the window again.
         buttonUpload.Enabled = True
         buttonAddToQueue.Enabled = True
         Me.Cursor = Cursors.Default
-	End Sub
-End Class
+	End Sub ' END ButtonUploadClick
+End Class ' END FormUploadQueue

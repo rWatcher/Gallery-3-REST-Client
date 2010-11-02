@@ -71,7 +71,7 @@ Partial Class FormUploadQueue
 		Me.textUploadDestination.Name = "textUploadDestination"
 		Me.textUploadDestination.ReadOnly = true
 		Me.textUploadDestination.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-		Me.textUploadDestination.Size = New System.Drawing.Size(177, 40)
+		Me.textUploadDestination.Size = New System.Drawing.Size(267, 40)
 		Me.textUploadDestination.TabIndex = 1
 		'
 		'listUploadQueue
@@ -82,7 +82,7 @@ Partial Class FormUploadQueue
 		Me.listUploadQueue.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.columnFileName, Me.columnUploadStatus})
 		Me.listUploadQueue.Location = New System.Drawing.Point(12, 54)
 		Me.listUploadQueue.Name = "listUploadQueue"
-		Me.listUploadQueue.Size = New System.Drawing.Size(270, 167)
+		Me.listUploadQueue.Size = New System.Drawing.Size(360, 184)
 		Me.listUploadQueue.TabIndex = 2
 		Me.listUploadQueue.UseCompatibleStateImageBehavior = false
 		Me.listUploadQueue.View = System.Windows.Forms.View.Details
@@ -90,7 +90,7 @@ Partial Class FormUploadQueue
 		'columnFileName
 		'
 		Me.columnFileName.Text = "File"
-		Me.columnFileName.Width = 133
+		Me.columnFileName.Width = 226
 		'
 		'columnUploadStatus
 		'
@@ -100,7 +100,7 @@ Partial Class FormUploadQueue
 		'buttonAddToQueue
 		'
 		Me.buttonAddToQueue.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-		Me.buttonAddToQueue.Location = New System.Drawing.Point(110, 260)
+		Me.buttonAddToQueue.Location = New System.Drawing.Point(200, 277)
 		Me.buttonAddToQueue.Name = "buttonAddToQueue"
 		Me.buttonAddToQueue.Size = New System.Drawing.Size(75, 23)
 		Me.buttonAddToQueue.TabIndex = 3
@@ -111,7 +111,7 @@ Partial Class FormUploadQueue
 		'buttonUpload
 		'
 		Me.buttonUpload.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-		Me.buttonUpload.Location = New System.Drawing.Point(191, 260)
+		Me.buttonUpload.Location = New System.Drawing.Point(281, 277)
 		Me.buttonUpload.Name = "buttonUpload"
 		Me.buttonUpload.Size = New System.Drawing.Size(75, 23)
 		Me.buttonUpload.TabIndex = 4
@@ -123,16 +123,16 @@ Partial Class FormUploadQueue
 		'
 		Me.progressUpload.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left)  _
 						Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-		Me.progressUpload.Location = New System.Drawing.Point(12, 227)
+		Me.progressUpload.Location = New System.Drawing.Point(12, 244)
 		Me.progressUpload.Name = "progressUpload"
-		Me.progressUpload.Size = New System.Drawing.Size(270, 23)
+		Me.progressUpload.Size = New System.Drawing.Size(360, 23)
 		Me.progressUpload.TabIndex = 5
 		'
 		'FormUploadQueue
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-		Me.ClientSize = New System.Drawing.Size(294, 295)
+		Me.ClientSize = New System.Drawing.Size(384, 312)
 		Me.Controls.Add(Me.progressUpload)
 		Me.Controls.Add(Me.buttonUpload)
 		Me.Controls.Add(Me.buttonAddToQueue)
