@@ -228,6 +228,7 @@ Partial Class FormLogin
 		Me.Name = "FormLogin"
 		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "Login"
+		AddHandler Load, AddressOf Me.FormLoginLoad
 		CType(Me.pictureGalleryLogo,System.ComponentModel.ISupportInitialize).EndInit
 		Me.groupBoxURL.ResumeLayout(false)
 		Me.groupBoxURL.PerformLayout

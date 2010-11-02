@@ -46,6 +46,9 @@ Partial Class FormAlbumBrowser
 		Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormAlbumBrowser))
 		Me.menuMain = New System.Windows.Forms.MenuStrip
 		Me.optionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
+		Me.aboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
+		Me.emptyImageCacheToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
+		Me.fullscreenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.albumToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.compareToLocalFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.uploadFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
@@ -55,7 +58,6 @@ Partial Class FormAlbumBrowser
 		Me.ImageListThumbs = New System.Windows.Forms.ImageList(Me.components)
 		Me.statusGallery = New System.Windows.Forms.StatusStrip
 		Me.labelGalleryStatus = New System.Windows.Forms.ToolStripStatusLabel
-		Me.aboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.menuMain.SuspendLayout
 		Me.splitContainer1.Panel1.SuspendLayout
 		Me.splitContainer1.Panel2.SuspendLayout
@@ -74,10 +76,33 @@ Partial Class FormAlbumBrowser
 		'
 		'optionsToolStripMenuItem
 		'
-		Me.optionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.aboutToolStripMenuItem})
+		Me.optionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.aboutToolStripMenuItem, Me.emptyImageCacheToolStripMenuItem, Me.fullscreenToolStripMenuItem})
 		Me.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem"
 		Me.optionsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
 		Me.optionsToolStripMenuItem.Text = "Options"
+		'
+		'aboutToolStripMenuItem
+		'
+		Me.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem"
+		Me.aboutToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+		Me.aboutToolStripMenuItem.Text = "About"
+		AddHandler Me.aboutToolStripMenuItem.Click, AddressOf Me.AboutToolStripMenuItemClick
+		'
+		'emptyImageCacheToolStripMenuItem
+		'
+		Me.emptyImageCacheToolStripMenuItem.Name = "emptyImageCacheToolStripMenuItem"
+		Me.emptyImageCacheToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+		Me.emptyImageCacheToolStripMenuItem.Text = "Empty Image Cache"
+		AddHandler Me.emptyImageCacheToolStripMenuItem.Click, AddressOf Me.EmptyImageCacheToolStripMenuItemClick
+		'
+		'fullscreenToolStripMenuItem
+		'
+		Me.fullscreenToolStripMenuItem.Name = "fullscreenToolStripMenuItem"
+		Me.fullscreenToolStripMenuItem.ShortcutKeyDisplayString = "F11"
+		Me.fullscreenToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F11
+		Me.fullscreenToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+		Me.fullscreenToolStripMenuItem.Text = "Fullscreen"
+		AddHandler Me.fullscreenToolStripMenuItem.Click, AddressOf Me.FullscreenToolStripMenuItemClick
 		'
 		'albumToolStripMenuItem
 		'
@@ -161,13 +186,6 @@ Partial Class FormAlbumBrowser
 		Me.labelGalleryStatus.Size = New System.Drawing.Size(118, 17)
 		Me.labelGalleryStatus.Text = "toolStripStatusLabel1"
 		'
-		'aboutToolStripMenuItem
-		'
-		Me.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem"
-		Me.aboutToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-		Me.aboutToolStripMenuItem.Text = "About"
-		AddHandler Me.aboutToolStripMenuItem.Click, AddressOf Me.AboutToolStripMenuItemClick
-		'
 		'FormAlbumBrowser
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
@@ -191,6 +209,8 @@ Partial Class FormAlbumBrowser
 		Me.ResumeLayout(false)
 		Me.PerformLayout
 	End Sub
+	Private fullscreenToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Private emptyImageCacheToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Private aboutToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Private uploadFilesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Private compareToLocalFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem

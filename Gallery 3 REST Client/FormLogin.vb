@@ -10,7 +10,7 @@
 '  WITHOUT ANY WARRANTY; without even the implied warranty of
 '  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 '  General Public License for more details.
-' 
+'
 '  You should have received a copy of the GNU General Public License
 '  along with this program; if not, write to the Free Software
 '  Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
@@ -18,6 +18,10 @@
 Imports GalleryLib
 
 Public Partial Class FormLogin
+	' Location of the program's data folder
+	'   (to be set when the form loads).
+	Dim strDataFolder As String = ""
+	
 	Public Sub New()
 		' The Me.InitializeComponent call is required for Windows Forms designer support.
 		Me.InitializeComponent()
@@ -30,7 +34,7 @@ Public Partial Class FormLogin
 	Sub ButtonLoginClick(sender As Object, e As EventArgs)
 		' Login to the remote Gallery with the provided information.
 		'   If successful, open the album browser window.
-		'   If not, display an error, and wait exit the sub so the 
+		'   If not, display an error, and wait exit the sub so the
 		'   user can fix it.
 		
 		' Make sure a URL was provided.
@@ -62,7 +66,7 @@ Public Partial Class FormLogin
             End If
         End If
         
-        ' Login was successful, open up the album window and connect it to the 
+        ' Login was successful, open up the album window and connect it to the
         '   existing Gallery Client instance.
         statusLabelLogin.Text = "Login Successful, Downloading Root Album Data"
         Application.DoEvents()
@@ -78,4 +82,21 @@ Public Partial Class FormLogin
         End While
         Me.Close()
 	End Sub ' END ButtonLoginClick
+	
+	Sub FormLoginLoad(sender As Object, e As EventArgs)
+		' Figure out if the data folder should be in the app directory or the application data directory.
+		'   Create the data and cache folders if they don't already exist.
+		If System.IO.Directory.Exists(Application.StartupPath & "\data") Then
+			strDataFolder = Application.StartupPath & "\data"
+		Else
+			strDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\Gallery3Client"
+		End If
+		If Not System.IO.Directory.Exists(strDataFolder) Then
+			System.IO.Directory.CreateDirectory(strDataFolder)
+			System.IO.Directory.CreateDirectory(strDataFolder & "\cache")
+		End If
+		If Not System.IO.Directory.Exists (strDataFolder & "\cache") Then
+			System.IO.Directory.CreateDirectory (strDataFolder & "\cache")
+		End If
+	End Sub ' END FormLoginLoad
 End Class ' END FormLogin

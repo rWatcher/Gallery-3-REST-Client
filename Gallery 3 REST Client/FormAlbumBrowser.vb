@@ -21,7 +21,10 @@ Imports GalleryLib
 
 Public Partial Class FormAlbumBrowser
 	
+	' Set up a few global variables to be used throughout this form.
     Public GalleryClient As Gallery3.Client
+    Dim strDataFolder As String = ""
+    Dim strCacheFolder as String = ""
 
 	Public Sub New()
 		' The Me.InitializeComponent call is required for Windows Forms designer support.
@@ -37,6 +40,15 @@ Public Partial Class FormAlbumBrowser
 		'   Download details of Item #1 (the root album)
 		'   and all of its member items, also handle initial
 		'   setup of the form.
+		
+		' Figure out where the data and cache folders are.
+		If System.IO.Directory.Exists(Application.StartupPath & "\data") Then
+			strDataFolder = Application.StartupPath & "\data"
+			strCacheFolder = strDataFolder & "\cache"
+		Else
+			strDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\Gallery3Client"
+			strCacheFolder = strDataFolder & "\cache"
+		End If
 		
 		' Display a status message and run DoEvents
 		'  to make sure the message is displayed.
@@ -168,7 +180,7 @@ Public Partial Class FormAlbumBrowser
                 labelGalleryStatus.Text = "Loading Thumbnails (" & counter.ToString & " of " & listPictures.Items.Count.ToString() & ")"
                 
                 ' Figure out what the file name for the thumbnail should be, and retrieve the details for this item.
-                Dim strFileThumbPath As String = Application.StartupPath & "\cache\" & OneItemView.Tag & "_thumb"
+                Dim strFileThumbPath As String = strCacheFolder & "\" & OneItemView.Tag & "_thumb"
                 Dim OneChildData As Linq.JObject = GalleryClient.GetItem(Convert.ToInt32(OneItemView.Tag))
                 
                 ' If the thumbnail is already downloaded into the cache, and the album selection hasn't
@@ -214,7 +226,7 @@ Public Partial Class FormAlbumBrowser
             	
             	' Check to see if the resize already exists in the cache,
             	'   if it does, display it, or else download and display it.
-                Dim strFileResizePath As String = Application.StartupPath & "\cache\" & listPictures.SelectedItems(0).Tag & "_resize"
+                Dim strFileResizePath As String = strCacheFolder & "\" & listPictures.SelectedItems(0).Tag & "_resize"
                 If System.IO.File.Exists(strFileResizePath) Then
                     Dim WindowViewResize As New formViewPicture
                     WindowViewResize.PictureResize.Image = System.Drawing.Image.FromFile(strFileResizePath)
@@ -382,4 +394,29 @@ Public Partial Class FormAlbumBrowser
 		Dim WindowAbout As New FormAbout
 		WindowAbout.Show()
 	End Sub ' END AboutToolStripMenuItemClick
+	
+	Sub EmptyImageCacheToolStripMenuItemClick(sender As Object, e As EventArgs)
+		' Delete the image cache folder, then make a new one.
+		
+		Dim CacheDirectory As New System.IO.DirectoryInfo(strCacheFolder)
+		CacheDirectory.Delete(true)
+		CacheDirectory.Create()
+		MessageBox.Show ("Image Cache Emptied Successfully.", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information)
+	End Sub ' END EmptyImageCacheToolStripMenuItemClick
+	
+	Sub FullscreenToolStripMenuItemClick(sender As Object, e As EventArgs)
+		' Switch the main window between windowed and fullscreen mode.
+		
+		' Toggle the checked status.
+		FullscreenToolStripMenuItem.Checked = (FullscreenToolStripMenuItem.Checked = False)
+		
+		' Switch fullscreen off or on based on if the menu option is checked.
+        If FullscreenToolStripMenuItem.Checked = True Then
+            Me.FormBorderStyle = Windows.Forms.FormBorderStyle.None
+            Me.WindowState = FormWindowState.Maximized
+        Else
+            Me.FormBorderStyle = Windows.Forms.FormBorderStyle.Sizable
+            Me.WindowState = FormWindowState.Normal
+        End If
+	End Sub ' END FullscreenToolStripMenuItemClick
 End Class ' EndFormAlbumBrowser
