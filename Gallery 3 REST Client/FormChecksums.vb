@@ -16,7 +16,7 @@
 '  Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
 '
 Imports Newtonsoft.Json
-Imports GalleryLib.GalleryLib
+Imports GalleryLib
 
 Public Partial Class FormChecksums
 	Public Sub New()
