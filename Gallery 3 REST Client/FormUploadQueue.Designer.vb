@@ -142,7 +142,6 @@ Partial Class FormUploadQueue
 		Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
 		Me.Name = "FormUploadQueue"
 		Me.Text = "Upload Files"
-		AddHandler Load, AddressOf Me.FormUploadQueueLoad
 		Me.ResumeLayout(false)
 		Me.PerformLayout
 	End Sub
