@@ -109,6 +109,7 @@ Public Class Gallery3
             Try
                 ' Send login info.
                 Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(Gallery3URL & "rest/"), System.Net.HttpWebRequest)
+                request.UserAgent = "rWatcher's Gallery 3 Client"
                 request.Credentials = System.Net.CredentialCache.DefaultCredentials
                 request.Method = "POST"
                 request.ContentType = "application/x-www-form-urlencoded"
@@ -146,6 +147,7 @@ Public Class Gallery3
             Try
                 ' Send the login request.
                 Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(Gallery3URL & "rest/item/1/"), System.Net.HttpWebRequest)
+                request.UserAgent = "rWatcher's Gallery 3 Client"
                 request.Credentials = System.Net.CredentialCache.DefaultCredentials
                 request.Method = "GET"
                 request.Headers.Add("X-Gallery-Request-Method", "get")
@@ -200,6 +202,7 @@ Public Class Gallery3
                 Else
                     ' Send the login request.
                     Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(ItemURL), System.Net.HttpWebRequest)
+                    request.UserAgent = "rWatcher's Gallery 3 Client"
                     request.Credentials = System.Net.CredentialCache.DefaultCredentials
                     request.Method = "GET"
                     request.Headers.Add("X-Gallery-Request-Method", "get")
@@ -274,6 +277,7 @@ Public Class Gallery3
             Try
                 ' Send login info and list of URLs for the items being requested.
                 Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(Gallery3URL & "rest/items/"), System.Net.HttpWebRequest)
+                request.UserAgent = "rWatcher's Gallery 3 Client"
                 request.Credentials = System.Net.CredentialCache.DefaultCredentials
                 request.Method = "POST"
                 request.ContentType = "application/x-www-form-urlencoded"
@@ -337,6 +341,7 @@ Public Class Gallery3
             Try
                 ' Send the login info and request the checksum.
                 Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(ItemURL), System.Net.HttpWebRequest)
+                request.UserAgent = "rWatcher's Gallery 3 Client"
                 request.Credentials = System.Net.CredentialCache.DefaultCredentials
                 request.Method = "GET"
                 request.Headers.Add("X-Gallery-Request-Method", "get")
@@ -381,6 +386,7 @@ Public Class Gallery3
             ' Connect to remote server and request the file.
             Dim response As System.Net.HttpWebResponse
             Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(url), System.Net.HttpWebRequest)
+			request.UserAgent = "rWatcher's Gallery 3 Client"
             request.Credentials = System.Net.CredentialCache.DefaultCredentials
             request.Method = "GET"
             request.Headers.Add("X-Gallery-Request-Method", "get")
@@ -477,6 +483,7 @@ Public Class Gallery3
             Try
             	' Open a new web connection to create the album with.
                 Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(Gallery3URL & "rest/item/" & intParentID.ToString), System.Net.HttpWebRequest)
+				request.UserAgent = "rWatcher's Gallery 3 Client"
                 request.Credentials = System.Net.CredentialCache.DefaultCredentials
                 request.Method = "POST"
                 request.ContentType = "application/x-www-form-urlencoded"

@@ -136,6 +136,7 @@ Partial Class FormCreateAlbum
 		'
 		'FormCreateAlbum
 		'
+		Me.AcceptButton = Me.buttonCreate
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.ClientSize = New System.Drawing.Size(390, 268)
