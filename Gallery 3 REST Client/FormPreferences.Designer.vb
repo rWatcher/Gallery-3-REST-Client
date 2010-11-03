@@ -126,6 +126,8 @@ Partial Class FormPreferences
 		Me.Controls.Add(Me.labelPrefsHeading)
 		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D
 		Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
+		Me.MaximizeBox = false
+		Me.MinimizeBox = false
 		Me.Name = "FormPreferences"
 		Me.Text = "Preferences"
 		AddHandler Load, AddressOf Me.FormPreferencesLoad

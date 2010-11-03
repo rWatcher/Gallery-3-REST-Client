@@ -207,6 +207,7 @@ Partial Class FormAlbumBrowser
 		Me.Name = "FormAlbumBrowser"
 		Me.Text = "Browse Albums"
 		AddHandler Load, AddressOf Me.FormAlbumBrowserLoad
+		AddHandler Closing, AddressOf Me.FormAlbumBrowserClosing
 		Me.menuMain.ResumeLayout(false)
 		Me.menuMain.PerformLayout
 		Me.splitContainer1.Panel1.ResumeLayout(false)

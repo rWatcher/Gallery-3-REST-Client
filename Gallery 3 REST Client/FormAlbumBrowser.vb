@@ -172,12 +172,15 @@ Public Partial Class FormAlbumBrowser
             '  this way the user can see everything in the album right
             '  away, and click on stuff while the thumbs load.
             
-            ' Set teh status, and reset the counter before looping through listPictures.
+            ' Set the status, and reset the counter before looping through listPictures.
             labelGalleryStatus.Text = "Loading Thumbnails"
             Dim OneItemView As ListViewItem
             counter = 1
             For Each OneItemView In listPictures.Items
+            	
+            	' Update the status text.
                 labelGalleryStatus.Text = "Loading Thumbnails (" & counter.ToString & " of " & listPictures.Items.Count.ToString() & ")"
+                Application.DoEvents()
                 
                 ' Figure out what the file name for the thumbnail should be, and retrieve the details for this item.
                 Dim strFileThumbPath As String = strCacheFolder & "\" & OneItemView.Tag & "_thumb"
@@ -403,6 +406,24 @@ Public Partial Class FormAlbumBrowser
 		CacheDirectory.Create()
 		MessageBox.Show ("Image Cache Emptied Successfully.", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information)
 	End Sub ' END EmptyImageCacheToolStripMenuItemClick
+	
+	Sub FormAlbumBrowserClosing(sender As Object, e As EventArgs)
+		' Empty the image cache on exit (if the user checked the necessary box).
+		
+		' Load preferences from the config file.
+        Dim results() As DataRow
+        Dim g3Prefs As New DataSet
+        g3Prefs.ReadXmlSchema(Application.StartupPath & "\config.xsd")
+        g3Prefs.ReadXml(strDataFolder & "\config.xml")
+        
+        ' If EmptyCache is checked, delete and re-create the cache folder.
+        results = g3Prefs.Tables(0).Select("ConfigName = 'EmptyCache'")
+        If results(0).Item(1) = True Then
+			Dim CacheDirectory As New System.IO.DirectoryInfo(strCacheFolder)
+			CacheDirectory.Delete(true)
+			CacheDirectory.Create()        	
+        End If
+	End Sub ' END FormAlbumBrowserClosing
 	
 	Sub FullscreenToolStripMenuItemClick(sender As Object, e As EventArgs)
 		' Switch the main window between windowed and fullscreen mode.
