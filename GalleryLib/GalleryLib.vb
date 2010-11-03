@@ -262,7 +262,9 @@ Public Class Gallery3
                 	ItemsArray.Add(strCachedResults)
                 End If
             Next
-            txtServerRequest = txtServerRequest.Substring(0, txtServerRequest.Length - 1) & "]" ' Take off the , then add ]
+            
+            ' Replace the ending "," character with a "]" to complete the string.
+            txtServerRequest = txtServerRequest.Substring(0, txtServerRequest.Length - 1) & "]"
             
             ' If everything is already in the cache, just return the cached results.
             If txtServerRequest = "urls=]" Then

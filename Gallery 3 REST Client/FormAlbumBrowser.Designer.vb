@@ -49,6 +49,7 @@ Partial Class FormAlbumBrowser
 		Me.aboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.emptyImageCacheToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.fullscreenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
+		Me.preferencesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.albumToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.compareToLocalFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.uploadFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
@@ -58,7 +59,10 @@ Partial Class FormAlbumBrowser
 		Me.ImageListThumbs = New System.Windows.Forms.ImageList(Me.components)
 		Me.statusGallery = New System.Windows.Forms.StatusStrip
 		Me.labelGalleryStatus = New System.Windows.Forms.ToolStripStatusLabel
-		Me.preferencesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
+		Me.toolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator
+		Me.toolStripMenuItem2 = New System.Windows.Forms.ToolStripSeparator
+		Me.createNewAlbumToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
+		Me.toolStripMenuItem3 = New System.Windows.Forms.ToolStripSeparator
 		Me.menuMain.SuspendLayout
 		Me.splitContainer1.Panel1.SuspendLayout
 		Me.splitContainer1.Panel2.SuspendLayout
@@ -77,7 +81,7 @@ Partial Class FormAlbumBrowser
 		'
 		'optionsToolStripMenuItem
 		'
-		Me.optionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.aboutToolStripMenuItem, Me.emptyImageCacheToolStripMenuItem, Me.fullscreenToolStripMenuItem, Me.preferencesToolStripMenuItem})
+		Me.optionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.fullscreenToolStripMenuItem, Me.emptyImageCacheToolStripMenuItem, Me.toolStripMenuItem1, Me.preferencesToolStripMenuItem, Me.toolStripMenuItem2, Me.aboutToolStripMenuItem})
 		Me.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem"
 		Me.optionsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
 		Me.optionsToolStripMenuItem.Text = "Options"
@@ -105,9 +109,16 @@ Partial Class FormAlbumBrowser
 		Me.fullscreenToolStripMenuItem.Text = "Fullscreen"
 		AddHandler Me.fullscreenToolStripMenuItem.Click, AddressOf Me.FullscreenToolStripMenuItemClick
 		'
+		'preferencesToolStripMenuItem
+		'
+		Me.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem"
+		Me.preferencesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+		Me.preferencesToolStripMenuItem.Text = "Preferences..."
+		AddHandler Me.preferencesToolStripMenuItem.Click, AddressOf Me.PreferencesToolStripMenuItemClick
+		'
 		'albumToolStripMenuItem
 		'
-		Me.albumToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.compareToLocalFolderToolStripMenuItem, Me.uploadFilesToolStripMenuItem})
+		Me.albumToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.uploadFilesToolStripMenuItem, Me.createNewAlbumToolStripMenuItem, Me.toolStripMenuItem3, Me.compareToLocalFolderToolStripMenuItem})
 		Me.albumToolStripMenuItem.Name = "albumToolStripMenuItem"
 		Me.albumToolStripMenuItem.Size = New System.Drawing.Size(55, 20)
 		Me.albumToolStripMenuItem.Text = "Album"
@@ -187,12 +198,26 @@ Partial Class FormAlbumBrowser
 		Me.labelGalleryStatus.Size = New System.Drawing.Size(118, 17)
 		Me.labelGalleryStatus.Text = "toolStripStatusLabel1"
 		'
-		'preferencesToolStripMenuItem
+		'toolStripMenuItem1
 		'
-		Me.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem"
-		Me.preferencesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-		Me.preferencesToolStripMenuItem.Text = "Preferences..."
-		AddHandler Me.preferencesToolStripMenuItem.Click, AddressOf Me.PreferencesToolStripMenuItemClick
+		Me.toolStripMenuItem1.Name = "toolStripMenuItem1"
+		Me.toolStripMenuItem1.Size = New System.Drawing.Size(177, 6)
+		'
+		'toolStripMenuItem2
+		'
+		Me.toolStripMenuItem2.Name = "toolStripMenuItem2"
+		Me.toolStripMenuItem2.Size = New System.Drawing.Size(177, 6)
+		'
+		'createNewAlbumToolStripMenuItem
+		'
+		Me.createNewAlbumToolStripMenuItem.Name = "createNewAlbumToolStripMenuItem"
+		Me.createNewAlbumToolStripMenuItem.Size = New System.Drawing.Size(207, 22)
+		Me.createNewAlbumToolStripMenuItem.Text = "Create New Album"
+		'
+		'toolStripMenuItem3
+		'
+		Me.toolStripMenuItem3.Name = "toolStripMenuItem3"
+		Me.toolStripMenuItem3.Size = New System.Drawing.Size(204, 6)
 		'
 		'FormAlbumBrowser
 		'
@@ -218,6 +243,10 @@ Partial Class FormAlbumBrowser
 		Me.ResumeLayout(false)
 		Me.PerformLayout
 	End Sub
+	Private toolStripMenuItem3 As System.Windows.Forms.ToolStripSeparator
+	Private createNewAlbumToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Private toolStripMenuItem2 As System.Windows.Forms.ToolStripSeparator
+	Private toolStripMenuItem1 As System.Windows.Forms.ToolStripSeparator
 	Private preferencesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Private fullscreenToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Private emptyImageCacheToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
