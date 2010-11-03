@@ -232,20 +232,42 @@ Public Class Gallery3
 
             '  If no URLs were given, return Nothing.
             If ItemURLs.Count = 0 Then Return Nothing
+            
+            ' Store the return list in here.
+            Dim ItemsArray As New List(Of String)
 
-            '@TODO:
-            ' Right now, this retrieves everything in an album, even if it's already cached.
-            '  I might want to re-work this to only retrieve files that aren't already cached?
-            '  As it stands now, this forces an update for the contents of an album, but doesn't
-            '  force an update for the album itself (which means new items won't necessarly show up).
-
-            ' Convert the URL array until a properly formated form data for the REST request.
+            ' Loop through each URL that was passed into the function.
+            '   If the URL is not already in the cache, add the URL to
+            '   a REST request to retrieve the details for it.
             Dim oneURL, txtServerRequest As String
             txtServerRequest = "urls=["
             For Each oneURL In ItemURLs
-                txtServerRequest = txtServerRequest & """" & oneURL & ""","
+            	
+            	' Figure out the ID# for the current URL.
+            	Dim ItemID as Integer
+            	If oneURL.EndsWith("/") Then
+            		Dim tempURL as String = oneURL.Substring(0, oneURL.Length - 1)
+            		ItemID = Convert.ToInt32(tempURL.Substring(tempURL.LastIndexOf("/") + 1))
+            	Else
+            		ItemID = Convert.ToInt32(oneURL.Substring(oneURL.LastIndexOf("/") + 1))
+                End If
+                
+                ' Check and see if this item is already cached.
+                '   If it is, used the cached response instead of 
+                '   re-requesting it.
+                Dim strCachedResults As String = ItemCache.GetItem(ItemID)
+                If strCachedResults = "" Then
+                	txtServerRequest = txtServerRequest & """" & oneURL & ""","
+                Else
+                	ItemsArray.Add(strCachedResults)
+                End If
             Next
-            txtServerRequest = txtServerRequest.Substring(0, txtServerRequest.Length - 1) & "]"
+            txtServerRequest = txtServerRequest.Substring(0, txtServerRequest.Length - 1) & "]" ' Take off the , then add ]
+            
+            ' If everything is already in the cache, just return the cached results.
+            If txtServerRequest = "urls=]" Then
+            	Return ItemsArray
+            End If
 
             Try
                 ' Send login info and list of URLs for the items being requested.
@@ -270,7 +292,6 @@ Public Class Gallery3
 
                 ' Split up the server's response into individual items
                 txtServerResponse = txtServerResponse.Substring(1, txtServerResponse.Length - 1)
-                Dim ItemsArray As New List(Of String)
                 Dim NewItemObject As Linq.JObject
                 While txtServerResponse.IndexOf(",{""url"":") > 0
                     ' Store each item into ItemsArray (to be returned at the end)
