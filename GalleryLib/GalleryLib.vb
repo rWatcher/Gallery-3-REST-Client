@@ -461,7 +461,50 @@ Public Class Gallery3
             '   Returns True if successful, false otherwise.
 
             Dim UploadObject As New ClassFileUpload
-            Return UploadObject.Upload(url, FileToUpload, Me.Gallery3RESTKey)
+            Return UploadObject.Upload(url, FileToUpload, Gallery3RESTKey)
         End Function ' END UploadFile
+        
+        Function CreateAlbum (ByVal intParentID As Integer, ByVal strFolderName As String, ByVal strAlbumTitle As String, ByVal strAlbumDescription As String, ByVal strURLSlug As String) As Boolean
+        	' Create a new album.  Returns true if successful, false otherwise.
+        	
+        	' Convert the provided information into urlencoded form data to submit to the gallery server.
+            Dim txtServerRequest As String = "{""name"":""" & strFolderName & _
+                                             """,""title"":""" & strAlbumTitle.Replace("""", "\""") & _
+                                             """,""type"":""album"",""description"":""" & strAlbumDescription.Replace("""", "\""").Replace(vbNewLine, "\n") & _
+                                             """,""slug"":""" & strURLSlug & """}"
+			txtServerRequest = "entity=" & System.Web.HttpUtility.UrlEncode(txtServerRequest)
+			
+            Try
+            	' Open a new web connection to create the album with.
+                Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(Gallery3URL & "rest/item/" & intParentID.ToString), System.Net.HttpWebRequest)
+                request.Credentials = System.Net.CredentialCache.DefaultCredentials
+                request.Method = "POST"
+                request.ContentType = "application/x-www-form-urlencoded"
+                request.Headers.Add("X-Gallery-Request-Method", "post")
+                request.Headers.Add("X-Gallery-Request-Key", Gallery3RESTKey)
+                
+                ' Transmit the variables for the new album.
+                Dim datastream As System.IO.Stream = request.GetRequestStream
+                Dim encoding As New System.Text.UTF8Encoding
+                datastream.Write(encoding.GetBytes(txtServerRequest), 0, encoding.GetBytes(txtServerRequest).Length)
+                datastream.Close()
+                
+                ' Get the server's response.  This contains the URL of the new item
+                '   (which we don't do anything with).
+                Dim response As System.Net.HttpWebResponse = CType(request.GetResponse(), System.Net.HttpWebResponse)
+                Dim receiveStream As System.IO.Stream = response.GetResponseStream()
+                Dim readStream As New System.IO.StreamReader(receiveStream, System.Text.Encoding.UTF8)
+                Dim txtServerResponse As String = readStream.ReadToEnd
+                response.Close()
+                readStream.Close()
+                
+                ' Return true.
+                return True
+            Catch ex As Exception
+                ' In the event of an error, display the message and return false.
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return False
+            End Try        	
+        End Function ' END CreateAlbum
     End Class ' END Client
 End Class ' End Gallery3

@@ -117,6 +117,10 @@
     <Compile Include="FormChecksums.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="FormCreateAlbum.Designer.vb">
+      <DependentUpon>FormCreateAlbum.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormCreateAlbum.vb" />
     <Compile Include="FormDownload.Designer.vb">
       <DependentUpon>FormDownload.vb</DependentUpon>
     </Compile>
@@ -156,6 +160,9 @@
     <EmbeddedResource Include="FormChecksums.resx">
       <DependentUpon>FormChecksums.vb</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCreateAlbum.resx">
+      <DependentUpon>FormCreateAlbum.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormDownload.resx">
       <DependentUpon>FormDownload.vb</DependentUpon>

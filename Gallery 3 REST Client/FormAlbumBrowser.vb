@@ -447,4 +447,32 @@ Public Partial Class FormAlbumBrowser
 		Dim WindowPreferences As New FormPreferences
 		WindowPreferences.Show()
 	End Sub ' END PreferencesToolStripMenuItemClick
+	
+	Sub CreateNewAlbumToolStripMenuItemClick(sender As Object, e As EventArgs)
+		' Display the create new album window.
+		
+		' Store the ID # for the selected album, in case the user 
+		'   selects something else before this sub finishes.
+		Dim SelectedAlbumID As String = treeAlbums.SelectedNode.Tag
+		
+		' Create a new window.
+		Dim WindowNewAlbum As New FormCreateAlbum
+		WindowNewAlbum.GalleryClient = GalleryClient
+		WindowNewAlbum.intParentID = Convert.ToInt32(SelectedAlbumID)
+		WindowNewAlbum.Show()
+		
+		' While the window is visible, pause this sub.
+		While WindowNewAlbum.Visible
+			Application.DoEvents()
+		End While
+		
+		' Once the window is no longer visible, assume a new album was created.
+		'   Remove the cached data for the parent album in order to force a refresh.
+		GalleryClient.ItemCache.RemoveItem(Convert.ToInt32(SelectedAlbumID))
+		
+		' If the album selection hasn't changed, reload it to display the new uploads.
+		If treeAlbums.SelectedNode.Tag = SelectedAlbumID Then
+		  TreeAlbumsAfterSelect(sender, new TreeViewEventArgs(TreeAlbums.SelectedNode))
+		End If
+	End Sub ' END CreateNewAlbumToolStripMenuItemClick
 End Class ' EndFormAlbumBrowser

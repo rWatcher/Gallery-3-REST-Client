@@ -135,6 +135,6 @@ Public Partial Class FormLogin
         results = g3Prefs.Tables(0).Select("ConfigName = 'G3RESTKey'")
         txtRESTKey.Text = results(0).Item(1).ToString		
         results = g3Prefs.Tables(0).Select("ConfigName = 'SaveLogin'")
-        checkSaveLoginDetails.Checked = results(0).Item(1).ToString		
+        checkSaveLoginDetails.Checked = results(0).Item(1).ToString
 	End Sub ' END FormLoginLoad
 End Class ' END FormLogin
