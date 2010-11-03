@@ -76,7 +76,7 @@ Public Partial Class FormAlbumBrowser
         End If
         
         ' Add the root album to treeAlbums.
-        rootNode.Text = RootItem("entity").Item("title").ToString.Replace("""", "")
+        rootNode.Text = RootItem("entity").Item("title")
         rootNode.Tag = RootItem("entity").Item("id").ToString.Replace("""", "")
         treeAlbums.Nodes.Add(rootNode)
         treeAlbums.ExpandAll()
@@ -125,7 +125,7 @@ Public Partial Class FormAlbumBrowser
                 ' If it's an album, add it to treeAlbums
                 If (OneChildData("entity").Item("type").ToString = """album""") Then
                     Dim SubAlbumTree As New TreeNode
-                    SubAlbumTree.Text = OneChildData("entity").Item("title").ToString.Replace("""", "")
+                    SubAlbumTree.Text = OneChildData("entity").Item("title")
                     SubAlbumTree.Tag = OneChildData("entity").Item("id").ToString.Replace("""", "")
                     Dim SearchTree As New TreeNode
                     
@@ -148,7 +148,7 @@ Public Partial Class FormAlbumBrowser
                 	
                     ' Display everything that's not an album in the listPictures object.
                     Dim oneChildViewItem As New ListViewItem
-                    oneChildViewItem.Text = OneChildData("entity").Item("title").ToString.Replace("""", "")
+                    oneChildViewItem.Text = OneChildData("entity").Item("title")
                     oneChildViewItem.Tag = OneChildData("entity").Item("id").ToString.Replace("""", "")
                     
                     ' Load the item onto listPictures with the default thumbnail (for now)
