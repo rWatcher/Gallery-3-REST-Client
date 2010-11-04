@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<ClassDiagram Zoom="1" MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="Gallery_3_REST_Client.My.MyApplication" Collapsed="False">
+    <Position X="0.5" Y="0.5" Width="2.356413" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="False" />
+    </Compartments>
+  </Class>
+  <Class Name="Gallery_3_REST_Client.My.MyComputer" Collapsed="False">
+    <Position X="0.5" Y="2.2" Width="2.356413" />
+    <Compartments />
+  </Class>
+  <Class Name="Gallery_3_REST_Client.My.MyForms" Collapsed="False">
+    <Position X="0.5" Y="3.2" Width="2.611393" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="False" />
+    </Compartments>
+  </Class>
+  <Class Name="Gallery_3_REST_Client.My.MyProject" Collapsed="False">
+    <Position X="0.5" Y="6.1" Width="2.44466" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="False" />
+    </Compartments>
+  </Class>
+  <Class Name="Gallery_3_REST_Client.FormCreateAlbum" Collapsed="False">
+    <Position X="0.5" Y="7.9" Width="1.976286" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="False" />
+      <Compartment Name="Fields" Collapsed="False" />
+    </Compartments>
+  </Class>
+  <Class Name="Gallery_3_REST_Client.FormAbout" Collapsed="False">
+    <Position X="0.5" Y="11.9" Width="2.211217" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="False" />
+      <Compartment Name="Fields" Collapsed="False" />
+    </Compartments>
+  </Class>
+  <Class Name="Gallery_3_REST_Client.FormAlbumBrowser" Collapsed="False">
+    <Position X="0.5" Y="14.4" Width="3.661305" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="False" />
+      <Compartment Name="Fields" Collapsed="False" />
+    </Compartments>
+  </Class>
+  <Class Name="Gallery_3_REST_Client.FormChecksums" Collapsed="False">
+    <Position X="0.5" Y="21.5" Width="2.638541" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="False" />
+      <Compartment Name="Fields" Collapsed="False" />
+    </Compartments>
+  </Class>
+  <Class Name="Gallery_3_REST_Client.FormDownload" Collapsed="False">
+    <Position X="0.5" Y="25.9" Width="2.16567" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="False" />
+      <Compartment Name="Fields" Collapsed="False" />
+    </Compartments>
+  </Class>
+  <Class Name="Gallery_3_REST_Client.FormLogin" Collapsed="False">
+    <Position X="0.5" Y="28.3" Width="2.489977" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="False" />
+      <Compartment Name="Fields" Collapsed="False" />
+    </Compartments>
+  </Class>
+  <Class Name="Gallery_3_REST_Client.FormPreferences" Collapsed="False">
+    <Position X="0.5" Y="33.3" Width="2.228244" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="False" />
+      <Compartment Name="Fields" Collapsed="False" />
+    </Compartments>
+  </Class>
+  <Class Name="Gallery_3_REST_Client.FormUploadQueue" Collapsed="False">
+    <Position X="0.5" Y="36.8" Width="2.38755" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="False" />
+      <Compartment Name="Fields" Collapsed="False" />
+    </Compartments>
+  </Class>
+  <Class Name="Gallery_3_REST_Client.FormViewPicture" Collapsed="False">
+    <Position X="0.5" Y="40.5" Width="1.827023" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="False" />
+      <Compartment Name="Fields" Collapsed="False" />
+    </Compartments>
+  </Class>
+  <Class Name="Gallery_3_REST_Client.My.Resources.Resources" Collapsed="False">
+    <Position X="0.5" Y="42.7" Width="2.472174" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="False" />
+      <Compartment Name="Fields" Collapsed="False" />
+    </Compartments>
+  </Class>
+  <Class Name="Gallery_3_REST_Client.My.MySettings" Collapsed="False">
+    <Position X="0.5" Y="44.7" Width="2.186242" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="False" />
+      <Compartment Name="Methods" Collapsed="False" />
+      <Compartment Name="Fields" Collapsed="False" />
+    </Compartments>
+  </Class>
+  <Class Name="Gallery_3_REST_Client.My.MySettingsProperty" Collapsed="False">
+    <Position X="0.5" Y="47.1" Width="1.579391" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="False" />
+    </Compartments>
+  </Class>
+</ClassDiagram>

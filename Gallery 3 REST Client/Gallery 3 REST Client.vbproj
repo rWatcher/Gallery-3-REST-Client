@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <StartupObject>Gallery_3_REST_Client.My.MyApplication</StartupObject>
     <RootNamespace>Gallery_3_REST_Client</RootNamespace>
-    <AssemblyName>Gallery 3 REST Client</AssemblyName>
+    <AssemblyName>Gallery Client</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
@@ -36,6 +36,7 @@
     <RemoveIntegerChecks>False</RemoveIntegerChecks>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <ApplicationIcon>gallery.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -190,6 +191,7 @@
       <Project>{B32C3E8A-A17E-4EC3-9229-7241E84B7202}</Project>
       <Name>GalleryLib</Name>
     </ProjectReference>
+    <Content Include="Gallery 3 REST Client.cd" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="My Project\AssemblyInfo.vb" />

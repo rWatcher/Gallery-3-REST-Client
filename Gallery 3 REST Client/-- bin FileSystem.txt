@@ -1,5 +1,5 @@
 Project Output
- - Gallery 3 REST Client.exe
+ - Gallery Client.exe
  - GalleryLib.dll
  - Newtonsoft.Json.dll
 
