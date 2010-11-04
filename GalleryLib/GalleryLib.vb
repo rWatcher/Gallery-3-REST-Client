@@ -33,17 +33,20 @@ Public Class Gallery3
         ' Create a list to store the actual data in.
         Private CachedItems As New List(Of Cache.Item)
 
+        '''<summary>
+        '''<para>Retrieves the number of items currently in the cache.</para>
+        '''</summary>
+        '''<returns>The number of items in the cache.</returns>
         Public Function Count() As Integer
-            ' Return the number of items currently in the cache.
-
             Return CachedItems.Count
         End Function ' END Count
 
+        '''<summary>
+        '''<para>Retrieves a specific item from the cache.</para>
+        '''</summary>
+        '''<param name="ItemID">ID number of the item to return</param>
+        '''<returns>Original server response or an empty string if the item isn't cached.</returns>
         Public Function GetItem(ByVal ItemID As Integer) As String
-            ' Retrieve a specific item from the Cache.
-            '   Either returns the cached response as a
-            '   string, or returns "" if it wasn't found.
-
             Dim CachedResults = From g3items In CachedItems Where g3items.ItemID = ItemID
             If CachedResults.Count > 0 Then
                 Return CachedResults(0).QueryResults
@@ -52,9 +55,11 @@ Public Class Gallery3
             End If
         End Function ' END GetItem
 
+        '''<summary>
+        '''<para>Removes an item from the cache (if it's in there).</para>
+        '''</summary>
+        '''<param name="ItemID">ID number of the item to remove.</param>
         Public Sub RemoveItem(ByVal ItemID As Integer)
-            ' Remove an item from the cache (if it exists).
-
             Dim counter As Integer = 0
             While counter < CachedItems.Count
                 If CachedItems(counter).ItemID = ItemID Then
@@ -64,9 +69,12 @@ Public Class Gallery3
             End While
         End Sub ' END RemoveItem
 
+        '''<summary>
+        '''<para>Adds a new item to the cache.</para>
+        '''</summary>
+        '''<param name="ItemID">ID number of the item to remove.</param>
+        '''<param name="txtQueryResults">The server response string.</param>
         Public Sub AddItem(ByVal ItemID As Integer, ByVal txtQueryResults As String)
-            '  Add a new item to the cache.
-
             RemoveItem(ItemID)
             Dim NewCachedItem As New Cache.Item
             NewCachedItem.ItemID = ItemID
@@ -85,6 +93,10 @@ Public Class Gallery3
         Dim Gallery3RESTKey As String
         Public ItemCache As New Cache
 
+        '''<summary>
+        '''<para>Create a new instance of Client.</para>
+        '''</summary>
+        '''<param name="url">The URL for the Gallery 3 web site.</param>
         Public Sub New(ByVal url As String)
             ' When creating a new client, make sure the URL ends with a "/",
             '   then store it in the global Gallery3URL variable.
@@ -95,17 +107,23 @@ Public Class Gallery3
             Gallery3URL = url
         End Sub ' END New
         
+        '''<summary>
+        '''<para>Returns the REST API Key currently being used.</para>
+        '''</summary>
+        '''<returns>REST API Key</returns>
         Public Function GetRESTKey() As String
-        	' Returns the value of Gallery3RESTKey.
         	'  Used by the main app to save the key to the config file.
         	
         	Return Gallery3RESTKey
         End Function ' END GetRESTKey
         
+        '''<summary>
+        '''<para>Converts a user name and password into a REST API key.</para>
+        '''</summary>
+        '''<param name="username">The login name.</param>
+        '''<param name="password">The corresponding password.</param>
+        '''<returns>True if successful, false if not.</returns>
         Public Function Login(ByVal username As String, ByVal password As String) As Boolean
-            ' Log into Gallery with USERNAME/PASSWORD
-            '   Returns True if successful, false otherwise.
-
             Try
                 ' Send login info.
                 Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(Gallery3URL & "rest/"), System.Net.HttpWebRequest)
@@ -140,10 +158,12 @@ Public Class Gallery3
             End Try
         End Function ' END Login
 
+        '''<summary>
+        '''<para>Logs into gallery with a REST key to make sure its valid.</para>
+        '''</summary>
+        '''<param name="RESTAPIKey">REST API Key to log in with.</param>
+        '''<returns>True is successful, False if not.</returns>
         Public Function Login(ByVal RESTAPIKey As String) As Boolean
-            ' Login to Gallery using a REST API key.
-            '   Returns True if successful, otherwise returns False.
-
             Try
                 ' Send the login request.
                 Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(Gallery3URL & "rest/item/1/"), System.Net.HttpWebRequest)
@@ -174,17 +194,21 @@ Public Class Gallery3
             End Try
         End Function ' END Login
 
+        '''<summary>
+        '''<para>Retrieves the details of an item from the Gallery server.</para>
+        '''</summary>
+        '''<param name="ItemID">ID number of the item to retrieve.</param>
+        '''<returns>The details for the specified item.  On error returns Nothing.</returns>
         Public Function GetItem(ByVal ItemID As Integer) As Linq.JObject
-            ' Request the details of a specific item (ItemID).
-            '  Returns a Linq.JObject containing the Item, or Nothing.
-
             Return Me.GetItem(Gallery3URL & "rest/item/" & ItemID.ToString)
         End Function
 
+        '''<summary>
+        '''<para>Retrieves the details of an item from the Gallery server.</para>
+        '''</summary>
+        '''<param name="ItemURL">Web URL for the item to retrieve.</param>
+        '''<returns>The details for the specified item.  On error returns Nothing.</returns>
         Public Function GetItem(ByVal ItemURL As String) As Linq.JObject
-            ' Request the details of a specific item (ItemID).
-            '  Returns a Linq.JObject containing the item, or Nothing.
-
             Try
                 '  Make sure ItemURL does not end with a "/",
                 '   Fix it if it does.
@@ -227,12 +251,14 @@ Public Class Gallery3
                 Return Nothing
             End Try
         End Function ' END GetItem
-
+        
+        '''<summary>
+        '''<para>Retrieves multiple items from the server, and returns
+        '''the response for each item in a list of strings.</para>
+        '''</summary>
+        '''<param name="ItemURLs">List of URLs to retrieve</param>
+        '''<returns>Server response data ast List(Of String).  On error returns Nothing.</returns>
         Public Function GetItems(ByVal ItemURLs As Linq.JToken) As List(Of String)
-            ' Retrieves multiple items from the server, and returns the response for
-            '   each item in a list of Strings.
-            '   Returns Nothing in the event of an error.
-
             '  If no URLs were given, return Nothing.
             If ItemURLs.Count = 0 Then Return Nothing
             
@@ -325,19 +351,22 @@ Public Class Gallery3
             End Try
         End Function ' END GetItems
 
+        '''<summary>
+        '''<para>Retrieves the MD5 or SHA-1 checksum for the specified photo or video.</para>
+        '''</summary>
+        '''<param name="ItemID">ID number of the item to retrieve.</param>
+        '''<param name="ChecksumType">Type of checksum to retrieve (md5 or sha1).</param>
+        '''<returns>The checksum or "".</returns>
         Public Function GetItemChecksum(ByVal ItemID As Integer, ByVal ChecksumType As String) As String
-            ' Retrieve the checksum (either md5 of sha1) for the original photo/video on the Gallery server.
-            '   Checksum is returned as a string.
-            '   In the event of an error, an empty string is returned instead.
-
             Return GetItemChecksum(Gallery3URL & "rest/itemchecksum_" & ChecksumType.ToLower & "/" & ItemID.ToString)
         End Function ' END GetItemChecksum
 
+        '''<summary>
+        '''<para>Retrieves the MD5 or SHA-1 checksum for the specified photo or video.</para>
+        '''</summary>
+        '''<param name="ItemURL">The full URL for the resource containing the desired checksum.</param>
+        '''<returns>The checksum or "".</returns>
         Public Function GetItemChecksum(ByVal ItemURL As String) As String
-            ' Retrieve the checksum (either md5 of sha1) for the original photo/video on the Gallery server.
-            '   Checksum is returned as a string.
-            '   In the event of an error, an empty string is returned instead.
-
             Try
                 ' Send the login info and request the checksum.
                 Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(ItemURL), System.Net.HttpWebRequest)
@@ -366,11 +395,14 @@ Public Class Gallery3
             End Try
         End Function ' END GetItemChecksum
 
+        '''<summary>
+        '''<para>Downloads the specified file over a REST authenticated connection.</para>
+        '''</summary>
+        '''<param name="ItemID">ID number of the item to retrieve.</param>
+        '''<param name="FieldName">The field containing the URL to the type of file desired (file_url, resize_url, or thumb_url).</param>
+        '''<param name="SavedFileName">The location to save the downloaded file to.</param>
+        '''<returns>True if successful, false otherwise.</returns>
         Function DownloadFile(ByVal ItemID As Integer, ByVal FieldName As String, ByRef SavedFileName As String) As Boolean
-            ' Download the specified Photo or Video.
-            '  FieldName can be either file_url, resize_url, or thumb_url depending on the item desired.
-            '  Returns true if successful, false otherwise.
-
             Dim ItemDetails As Linq.JObject = Me.GetItem(ItemID)
             If Not ItemDetails Is Nothing Then
                 Return Me.DownloadFile(ItemDetails("entity").Item(FieldName), SavedFileName)
@@ -379,10 +411,15 @@ Public Class Gallery3
             End If
         End Function ' END DownloadFile
 
+        '''<summary>
+        '''<para>Downloads the specified file over a REST authenticated connection.</para>
+        '''</summary>
+        '''<param name="url">The URL of the file to download</param>
+        '''<param name="SavedFileName">The location to save the downloaded file to.</param>
+        '''<param name="DownloadProgressBar">(Optional) An existing progress bar to use to display the download's progress.</param>
+        '''<param name="DownloadProgressText">(Optional) An existing label to use to display the download's progress.</param>
+        '''<returns>True if successful, false otherwise.</returns>
         Function DownloadFile(ByVal url As String, ByVal SavedFileName As String, Optional ByVal DownloadProgressBar As ProgressBar = Nothing, Optional ByVal DownloadProgressText As Label = Nothing) As Boolean
-            ' Download the specified Photo or Video.
-            '  Returns true if successful, false otherwise.
-
             ' Connect to remote server and request the file.
             Dim response As System.Net.HttpWebResponse
             Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(url), System.Net.HttpWebRequest)
@@ -400,15 +437,19 @@ Public Class Gallery3
                 Return False
             End Try
 
-            ' Download the requested file.
+            ' If the server responded with "OK", download the file.
             Dim DownloadedLength As Integer = 0
             If response.StatusDescription.ToString = "OK" Then
+            	
+            	' If a progress bar was provided, set its Maximum value.
                 If Not DownloadProgressBar Is Nothing Then
                     If response.ContentLength <> -1 Then
                         DownloadProgressBar.Maximum = Convert.ToInt32(response.ContentLength)
                     End If
                 End If
                 Application.DoEvents()
+                
+                ' Start downloading the file.
                 Dim dataStream As System.IO.Stream
                 Dim reader As System.IO.BinaryReader
                 Try
@@ -420,35 +461,47 @@ Public Class Gallery3
                     Dim buffer(4096) As Byte
                     length = reader.Read(buffer, 0, 4096)
                     DownloadedLength = DownloadedLength + length
+                    
+                    ' If a progress bar was provided, update it with the current amount downloaded.
                     If Not DownloadProgressBar Is Nothing Then
                         If response.ContentLength = -1 Then
                             DownloadProgressBar.Maximum = DownloadedLength
                         End If
                         DownloadProgressBar.Value = DownloadedLength
                     End If
+                    
+                    ' If a label was provided, update it with the current amount downloaded.
                     If Not DownloadProgressText Is Nothing Then
                         DownloadProgressText.Text = Math.Round(DownloadedLength / 1024 / 1024, 2).ToString & "MB"
                     End If
+                    
+                    ' Download the rest of the file in chunks so
+                    '   we can keep the app responsive and update
+                    '   any visual progress indicators.
                     While (length > 0) And (Not (buffer Is Nothing))
                         Application.DoEvents()
                         writeFile.Write(buffer, 0, length)
                         Application.DoEvents()
                         length = reader.Read(buffer, 0, 4096)
                         DownloadedLength = DownloadedLength + length
+                        
+                        ' If a progress bar was provided, update it with the current amount downloaded.
                         If Not DownloadProgressBar Is Nothing Then
-                            If response.ContentLength = -1 Then
-                                DownloadProgressBar.Maximum = DownloadedLength
-                            End If
                             DownloadProgressBar.Value = DownloadedLength
                         End If
+                        
+                        ' If a label was provided, update it with thecurrent amount downloaded.
                         If Not DownloadProgressText Is Nothing Then
                             DownloadProgressText.Text = Math.Round(DownloadedLength / 1024 / 1024, 2).ToString & "MB"
                         End If
                     End While
+                    
+                    ' File download complete, close out everything before exiting.
                     writeFile.Flush()
                     writeFile.Close()
                     reader.Close()
                     dataStream.Close()
+
                 Catch ex As Exception
                     ' In the event of an error, display the message and return False.
                     MessageBox.Show(ex.ToString, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -462,17 +515,27 @@ Public Class Gallery3
             Return True
         End Function ' END DownloadFile.
 
+        '''<summary>
+        '''<para>Uploads a file to the Gallery server over a REST authenticated connection.</para>
+        '''</summary>
+        '''<param name="url">Web address of the album to upload the file into.</param>
+        '''<param name="FileToUpload">The location of the photo or video to upload.</param>
+        '''<returns>True if successful, false otherwise.</returns>
         Function UploadFile(ByVal url As String, ByVal FileToUpload As String) As Boolean
-            ' Upload a file to the Gallery Server.
-            '   Returns True if successful, false otherwise.
-
             Dim UploadObject As New ClassFileUpload
             Return UploadObject.Upload(url, FileToUpload, Gallery3RESTKey)
         End Function ' END UploadFile
         
+        '''<summary>
+        '''<para>Creates a new album on the Gallery server.</para>
+        '''</summary>
+        '''<param name="intParentID">ID number of the parent album.</param>
+        '''<param name="strFolderName">Desired file name to use for the album's directory.</param>
+        '''<param name="strAlbumTitle">The title for the new album.</param>
+        '''<param name="strAlbumDescription">A description for the album.</param>
+        '''<param name="strURLSlug">The slug to use in the album's url.</param>
+        '''<returns>True if successful, false otherwise.</returns>
         Function CreateAlbum (ByVal intParentID As Integer, ByVal strFolderName As String, ByVal strAlbumTitle As String, ByVal strAlbumDescription As String, ByVal strURLSlug As String) As Boolean
-        	' Create a new album.  Returns true if successful, false otherwise.
-        	
         	' Convert the provided information into urlencoded form data to submit to the gallery server.
             Dim txtServerRequest As String = "{""name"":""" & strFolderName & _
                                              """,""title"":""" & strAlbumTitle.Replace("""", "\""") & _
