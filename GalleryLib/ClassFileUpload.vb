@@ -28,7 +28,7 @@ Class ClassFileUpload
 	Public Shared UploadFileName As String = ""
 	Public Shared strServerResponse As String = ""
 	
-	Shared Function Upload(ByVal url As String, ByVal FileToUpload As String, ByVal Gallery3RESTKey As String) As Boolean
+	Function Upload(ByVal url As String, ByVal FileToUpload As String, ByVal Gallery3RESTKey As String) As Boolean
 		' Upload the specified file.
 		'   Returns true if successful, otherwise false.
 		
