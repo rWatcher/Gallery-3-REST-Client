@@ -62,9 +62,10 @@ Public Partial Class FormAlbumBrowser
         ' In the event of an error, ask the user if they want to try again or quit.
         While RootItem Is Nothing
         	If MessageBox.Show ("Unable to access root album, try again?", "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error) = DialogResult.No Then
-        		Me.Close()
+        		Application.Exit()
         		Exit Sub
         	End If
+        	GalleryClient.ItemCache.RemoveItem(1)
         	RootItem = GalleryClient.GetItem(1)
         End While
         
