@@ -11,6 +11,6 @@ Extra Files
  - config.xsd
 
 Optional:
- - cache/
+ - data/
 
 = 8 Files.
