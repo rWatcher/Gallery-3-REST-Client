@@ -434,6 +434,7 @@ Public Partial Class FormAlbumBrowser
 		
 		' Switch fullscreen off or on based on if the menu option is checked.
         If FullscreenToolStripMenuItem.Checked = True Then
+        	Me.WindowState = FormWindowState.Normal
             Me.FormBorderStyle = Windows.Forms.FormBorderStyle.None
             Me.WindowState = FormWindowState.Maximized
         Else
