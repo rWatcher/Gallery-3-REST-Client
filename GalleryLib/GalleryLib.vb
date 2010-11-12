@@ -402,7 +402,7 @@ Public Class Gallery3
         '''<param name="FieldName">The field containing the URL to the type of file desired (file_url, resize_url, or thumb_url).</param>
         '''<param name="SavedFileName">The location to save the downloaded file to.</param>
         '''<returns>True if successful, false otherwise.</returns>
-        Function DownloadFile(ByVal ItemID As Integer, ByVal FieldName As String, ByRef SavedFileName As String) As Boolean
+        Function DownloadFile(ByVal ItemID As Integer, ByVal FieldName As String, ByVal SavedFileName As String) As Boolean
             Dim ItemDetails As Linq.JObject = Me.GetItem(ItemID)
             If Not ItemDetails Is Nothing Then
                 Return Me.DownloadFile(ItemDetails("entity").Item(FieldName), SavedFileName)
@@ -416,17 +416,15 @@ Public Class Gallery3
         '''</summary>
         '''<param name="url">The URL of the file to download</param>
         '''<param name="SavedFileName">The location to save the downloaded file to.</param>
-        '''<param name="DownloadProgressBar">(Optional) An existing progress bar to use to display the download's progress.</param>
-        '''<param name="DownloadProgressText">(Optional) An existing label to use to display the download's progress.</param>
+        '''<param name="ShowProgress">(Optional) If true, creates a dialog to display how much of the file has been downloaded.</param>
         '''<returns>True if successful, false otherwise.</returns>
-        Function DownloadFile(ByVal url As String, ByVal SavedFileName As String, Optional ByVal DownloadProgressBar As ProgressBar = Nothing, Optional ByVal DownloadProgressText As Label = Nothing) As Boolean
+        Function DownloadFile(ByVal url As String, ByVal SavedFileName As String, Optional ByVal ShowProgress as Boolean = False) As Boolean
         	' Create a new ClassFileDownload Object, and store the provided parameters into it.
         	Dim objDownloadFile As New ClassFileDownload
         	objDownloadFile.strURL = url
         	objDownloadFile.strSavedFileName = SavedFileName
         	objDownloadFile.Gallery3RESTKey = Gallery3RESTKey 
-        	objDownloadFile.DownloadProgressBar = DownloadProgressBar
-        	objDownloadFile.DownloadProgressText = DownloadProgressText
+        	objDownloadFile.boolShowDownloadProgress = ShowProgress
         	
         	' Run the download as a seperate thread, so it won't slow down the main application.
         	Dim threadDownload As New Threading.Thread (AddressOf objDownloadFile.DownloadFile)

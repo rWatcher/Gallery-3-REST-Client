@@ -20,12 +20,22 @@ Imports System.Windows.Forms
 Friend Class ClassFileDownload
 	Public strURL As String = ""
 	Public strSavedFileName As String = ""
-	Public Gallery3RESTKey as String = ""
-	Public DownloadProgressBar As ProgressBar = Nothing
-	Public DownloadProgressText As Label = Nothing
+	Public Gallery3RESTKey As String = ""
+	Public boolShowDownloadProgress as Boolean = False
 	Public boolReturnValue As Boolean = False
 	
+	''' <summary>
+	''' <para>Downloads a binary file (photo or movie) from the remote Gallery server.</para>
+	''' </summary>
 	Sub DownloadFile()
+		' If necessary, create a progress window to display how much has been downloaded.
+		dim windowDownloadProgress as New FormDownload
+		If boolShowDownloadProgress = True Then
+			windowDownloadProgress.Text = "Saving To " & strSavedFileName
+			windowDownloadProgress.Show()
+			Application.DoEvents()
+		End If
+		
 		' Connect to remote server and request the file.
 		Dim response As System.Net.HttpWebResponse
 		Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(strURL), System.Net.HttpWebRequest)
@@ -48,10 +58,10 @@ Friend Class ClassFileDownload
 		Dim DownloadedLength As Integer = 0
 		If response.StatusDescription.ToString = "OK" Then
 			
-			' If a progress bar was provided, set its Maximum value.
-			If Not DownloadProgressBar Is Nothing Then
+			' If we're showing a download window, set the max value for the progress bar.
+			If boolShowDownloadProgress = True Then
 				If response.ContentLength <> -1 Then
-					DownloadProgressBar.Maximum = Convert.ToInt32(response.ContentLength)
+					windowDownloadProgress.ProgressDownload.Maximum = Convert.ToInt32(response.ContentLength)
 				End If
 			End If
 			Application.DoEvents()
@@ -69,17 +79,15 @@ Friend Class ClassFileDownload
 				length = reader.Read(buffer, 0, 4096)
 				DownloadedLength = DownloadedLength + length
 				
-				' If a progress bar was provided, update it with the current amount downloaded.
-				If Not DownloadProgressBar Is Nothing Then
+				' If we're showing a download widow, update it status.
+				If boolShowDownloadProgress = True Then
 					If response.ContentLength = -1 Then
-						DownloadProgressBar.Maximum = DownloadedLength
+						' If we don't know the full length of the file, just use the current
+						'   received length.
+						windowDownloadProgress.ProgressDownload.Maximum = DownloadedLength
 					End If
-					DownloadProgressBar.Value = DownloadedLength
-				End If
-				
-				' If a label was provided, update it with the current amount downloaded.
-				If Not DownloadProgressText Is Nothing Then
-					DownloadProgressText.Text = Math.Round(DownloadedLength / 1024 / 1024, 2).ToString & "MB"
+					windowDownloadProgress.ProgressDownload .Value = DownloadedLength
+					windowDownloadProgress.lblDownloadProgress.Text = Math.Round(DownloadedLength / 1024 / 1024, 2).ToString & "MB"
 				End If
 				
 				' Download the rest of the file in chunks so
@@ -92,14 +100,15 @@ Friend Class ClassFileDownload
 					length = reader.Read(buffer, 0, 4096)
 					DownloadedLength = DownloadedLength + length
 					
-					' If a progress bar was provided, update it with the current amount downloaded.
-					If Not DownloadProgressBar Is Nothing Then
-						DownloadProgressBar.Value = DownloadedLength
-					End If
-					
-					' If a label was provided, update it with thecurrent amount downloaded.
-					If Not DownloadProgressText Is Nothing Then
-						DownloadProgressText.Text = Math.Round(DownloadedLength / 1024 / 1024, 2).ToString & "MB"
+					' If we're showing a download widow, update it status.
+					If boolShowDownloadProgress = True Then
+						If response.ContentLength = -1 Then
+							' If we don't know the full length of the file, just use the current
+							'   received length.
+							windowDownloadProgress.ProgressDownload.Maximum = DownloadedLength
+						End If
+						windowDownloadProgress.ProgressDownload .Value = DownloadedLength
+						windowDownloadProgress.lblDownloadProgress.Text = Math.Round(DownloadedLength / 1024 / 1024, 2).ToString & "MB"
 					End If
 				End While
 				
@@ -108,6 +117,7 @@ Friend Class ClassFileDownload
 				writeFile.Close()
 				reader.Close()
 				dataStream.Close()
+				windowDownloadProgress.Close()
 				
 			Catch ex As Exception
 				' In the event of an error, display the message and return False.

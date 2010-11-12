@@ -221,11 +221,14 @@ Public Partial Class FormAlbumBrowser
 		
 		' Make sure something is selected, then download the details for that item.
         If listPictures.SelectedItems.Count > 0 Then
+        	' In case the user selects something else before the download finishes,
+        	'   we're going to store the selected item in a local variable.
+        	Dim selectedListViewItem as ListViewItem = listPictures.SelectedItems(0)
         	labelGalleryStatus.Text = "Loading Item..."
-            Dim selectedItem As Linq.JObject = GalleryClient.GetItem(Convert.ToInt32(listPictures.SelectedItems(0).Tag))
+            Dim selectedItemData As Linq.JObject = GalleryClient.GetItem(Convert.ToInt32(listPictures.SelectedItems(0).Tag))
             
             ' If the item is a photo, download the resize and display it.
-            If selectedItem("entity").Item("type").ToString = """photo""" Then
+            If selectedItemData("entity").Item("type").ToString = """photo""" Then
             	labelGalleryStatus.Text = "Loading Image..."
             	
             	' Check to see if the resize already exists in the cache,
@@ -234,43 +237,39 @@ Public Partial Class FormAlbumBrowser
                 If System.IO.File.Exists(strFileResizePath) Then
                     Dim WindowViewResize As New formViewPicture
                     WindowViewResize.PictureResize.Image = System.Drawing.Image.FromFile(strFileResizePath)
-                    WindowViewResize.Tag = listPictures.SelectedItems(0).Tag
-                    WindowViewResize.Text = listPictures.SelectedItems(0).Text
+                    WindowViewResize.Tag = selectedListViewItem.Tag
+                    WindowViewResize.Text = selectedListViewItem.Text
                     WindowViewResize.Show()
-                ElseIf GalleryClient.DownloadFile(selectedItem("entity").Item("resize_url"), strFileResizePath) Then
+                ElseIf GalleryClient.DownloadFile(selectedItemData("entity").Item("resize_url"), strFileResizePath) Then
                     Dim WindowViewResize As New formViewPicture
                     WindowViewResize.PictureResize.Image = System.Drawing.Image.FromFile(strFileResizePath)
-                    WindowViewResize.Tag = listPictures.SelectedItems(0).Tag
-                    WindowViewResize.Text = listPictures.SelectedItems(0).Text
+                    WindowViewResize.Tag = selectedListViewItem.Tag
+                    WindowViewResize.Text = selectedListViewItem.Text
                     WindowViewResize.Show()
                 Else
                     ' Unable to find / download thumb, load a default.png image instead.
                     Dim WindowViewResize As New formViewPicture
                     WindowViewResize.PictureResize.Image = System.Drawing.Image.FromFile(Application.StartupPath & "\default.png")
-                    WindowViewResize.Tag = listPictures.SelectedItems(0).Tag
-                    WindowViewResize.Text = listPictures.SelectedItems(0).Text
+                    WindowViewResize.Tag = selectedListViewItem.Tag
+                    WindowViewResize.Text = selectedListViewItem.Text
                     WindowViewResize.Show()
                 End If
 
-            ElseIf selectedItem("entity").Item("type").ToString = """movie""" Then
+            ElseIf selectedItemData("entity").Item("type").ToString = """movie""" Then
             	' If the item is a movie, ask if the user wants to download it.
                 If MessageBox.Show("Movie viewing is not available at this time, would you like to download the file instead?", "Unsupported File Type", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+                	dim strMovieURL as String = selectedItemData("entity").Item("file_url")
                     Dim SaveMovieAsDialog As New SaveFileDialog
-                    SaveMovieAsDialog.FileName = selectedItem("entity").Item("name")
+                    SaveMovieAsDialog.FileName = selectedItemData("entity").Item("name")
                     If SaveMovieAsDialog.ShowDialog = Windows.Forms.DialogResult.OK Then
-                        Dim DownloadProgressWindow As New formDownload
-                        DownloadProgressWindow.Text = "Saving To " & SaveMovieAsDialog.FileName
-                        DownloadProgressWindow.Show()
-                        Application.DoEvents()
-                        If GalleryClient.DownloadFile(selectedItem("entity").Item("file_url"), SaveMovieAsDialog.FileName, DownloadProgressWindow.ProgressDownload, DownloadProgressWindow.lblDownloadProgress) Then
+                        If GalleryClient.DownloadFile(strMovieURL, SaveMovieAsDialog.FileName, True) Then
                             MessageBox.Show("File Saved Successfully", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         End If
-                        DownloadProgressWindow.Close()
                     End If
                 End If
             Else
             	' This should never happen, but just in case the item isn't a photo or movie, display an error.
-                MessageBox.Show("Viewing " & selectedItem("entity").Item("type").ToString & " is not available at this time", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                MessageBox.Show("Viewing " & selectedItemData("entity").Item("type").ToString & " is not available at this time", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
         End If
         
