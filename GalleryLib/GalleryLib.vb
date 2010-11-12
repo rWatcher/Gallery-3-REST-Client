@@ -420,99 +420,23 @@ Public Class Gallery3
         '''<param name="DownloadProgressText">(Optional) An existing label to use to display the download's progress.</param>
         '''<returns>True if successful, false otherwise.</returns>
         Function DownloadFile(ByVal url As String, ByVal SavedFileName As String, Optional ByVal DownloadProgressBar As ProgressBar = Nothing, Optional ByVal DownloadProgressText As Label = Nothing) As Boolean
-            ' Connect to remote server and request the file.
-            Dim response As System.Net.HttpWebResponse
-            Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(url), System.Net.HttpWebRequest)
-			request.UserAgent = "rWatcher's Gallery 3 Client"
-            request.Credentials = System.Net.CredentialCache.DefaultCredentials
-            request.Method = "GET"
-            request.Headers.Add("X-Gallery-Request-Method", "get")
-            request.Headers.Add("X-Gallery-Request-Key", Gallery3RESTKey)
-            Try
-                response = CType(request.GetResponse(), System.Net.HttpWebResponse)
-                request.Timeout = 90 * 1000 ' seconds * 1000
-                request.Credentials = System.Net.CredentialCache.DefaultCredentials
-            Catch ex As Exception
-                MessageBox.Show(ex.ToString, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Return False
-            End Try
-
-            ' If the server responded with "OK", download the file.
-            Dim DownloadedLength As Integer = 0
-            If response.StatusDescription.ToString = "OK" Then
-            	
-            	' If a progress bar was provided, set its Maximum value.
-                If Not DownloadProgressBar Is Nothing Then
-                    If response.ContentLength <> -1 Then
-                        DownloadProgressBar.Maximum = Convert.ToInt32(response.ContentLength)
-                    End If
-                End If
-                Application.DoEvents()
-                
-                ' Start downloading the file.
-                Dim dataStream As System.IO.Stream
-                Dim reader As System.IO.BinaryReader
-                Try
-                    Dim downloadedFile As New System.IO.FileStream(SavedFileName, IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write)
-                    Dim writeFile As New System.IO.BinaryWriter(downloadedFile)
-                    dataStream = response.GetResponseStream()
-                    reader = New System.IO.BinaryReader(dataStream)
-                    Dim length As Integer
-                    Dim buffer(4096) As Byte
-                    length = reader.Read(buffer, 0, 4096)
-                    DownloadedLength = DownloadedLength + length
-                    
-                    ' If a progress bar was provided, update it with the current amount downloaded.
-                    If Not DownloadProgressBar Is Nothing Then
-                        If response.ContentLength = -1 Then
-                            DownloadProgressBar.Maximum = DownloadedLength
-                        End If
-                        DownloadProgressBar.Value = DownloadedLength
-                    End If
-                    
-                    ' If a label was provided, update it with the current amount downloaded.
-                    If Not DownloadProgressText Is Nothing Then
-                        DownloadProgressText.Text = Math.Round(DownloadedLength / 1024 / 1024, 2).ToString & "MB"
-                    End If
-                    
-                    ' Download the rest of the file in chunks so
-                    '   we can keep the app responsive and update
-                    '   any visual progress indicators.
-                    While (length > 0) And (Not (buffer Is Nothing))
-                        Application.DoEvents()
-                        writeFile.Write(buffer, 0, length)
-                        Application.DoEvents()
-                        length = reader.Read(buffer, 0, 4096)
-                        DownloadedLength = DownloadedLength + length
-                        
-                        ' If a progress bar was provided, update it with the current amount downloaded.
-                        If Not DownloadProgressBar Is Nothing Then
-                            DownloadProgressBar.Value = DownloadedLength
-                        End If
-                        
-                        ' If a label was provided, update it with thecurrent amount downloaded.
-                        If Not DownloadProgressText Is Nothing Then
-                            DownloadProgressText.Text = Math.Round(DownloadedLength / 1024 / 1024, 2).ToString & "MB"
-                        End If
-                    End While
-                    
-                    ' File download complete, close out everything before exiting.
-                    writeFile.Flush()
-                    writeFile.Close()
-                    reader.Close()
-                    dataStream.Close()
-
-                Catch ex As Exception
-                    ' In the event of an error, display the message and return False.
-                    MessageBox.Show(ex.ToString, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    Return False
-                End Try
-            Else
-                ' If the server didn't respond with "OK" return false.
-                Return False
-            End If
-            ' If nothing went wrong by now, return true for successful.
-            Return True
+        	' Create a new ClassFileDownload Object, and store the provided parameters into it.
+        	Dim objDownloadFile As New ClassFileDownload
+        	objDownloadFile.strURL = url
+        	objDownloadFile.strSavedFileName = SavedFileName
+        	objDownloadFile.Gallery3RESTKey = Gallery3RESTKey 
+        	objDownloadFile.DownloadProgressBar = DownloadProgressBar
+        	objDownloadFile.DownloadProgressText = DownloadProgressText
+        	
+        	' Run the download as a seperate thread, so it won't slow down the main application.
+        	Dim threadDownload As New Threading.Thread (AddressOf objDownloadFile.DownloadFile)
+        	threadDownload.Start ()
+        	
+        	' Wait until the thread exits, then return it's return value.
+        	While threadDownload.IsAlive()
+        		Application.DoEvents()
+        	End While
+        	Return objDownloadFile.boolReturnValue
         End Function ' END DownloadFile.
 
         '''<summary>

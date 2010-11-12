@@ -69,6 +69,7 @@
     <Import Include="System.Diagnostics" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
+    <Compile Include="ClassFileDownload.vb" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClassFileUpload.vb" />
