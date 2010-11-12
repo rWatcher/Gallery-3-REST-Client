@@ -297,7 +297,7 @@ Public Partial Class FormAlbumBrowser
             checksumWindow.txtRemoteAlbum.Tag = treeAlbums.SelectedNode.Tag
 			Dim OneAlbum As TreeNode = treeAlbums.SelectedNode
 			
-			' Generate a full path to the current album to display instead of 
+			' Generate a full path to the current album to display instead of
 			'   just the album name.
 			While OneAlbum.Tag <> "1"
 				OneAlbum = OneAlbum.Parent
@@ -400,12 +400,28 @@ Public Partial Class FormAlbumBrowser
 	End Sub ' END AboutToolStripMenuItemClick
 	
 	Sub EmptyImageCacheToolStripMenuItemClick(sender As Object, e As EventArgs)
-		' Delete the image cache folder, then make a new one.
+		' Delete the contents of the image cache folder.
 		
 		Dim CacheDirectory As New System.IO.DirectoryInfo(strCacheFolder)
-		CacheDirectory.Delete(true)
-		CacheDirectory.Create()
-		MessageBox.Show ("Image Cache Emptied Successfully.", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information)
+		Dim oneFile As System.IO.FileInfo
+		Dim FailedCounter As Integer = 0
+		
+		' Delete files one at a time, skipping anything that causes an error.
+		'   Errors usually mean the file is still in use.
+		For Each oneFile In CacheDirectory.GetFiles()
+			Try
+				oneFile.Delete()
+			Catch ex As Exception
+				FailedCounter = FailedCounter + 1
+			End Try
+		Next
+		
+		' Display a success message, or tell the user how many files are left.
+		If FailedCounter = 0 Then
+			MessageBox.Show ("Image Cache Emptied Successfully.", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information)
+		Else
+			MessageBox.Show (FailedCounter.ToString() & " files were in use and could not be deleted.", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information)
+		End If
 	End Sub ' END EmptyImageCacheToolStripMenuItemClick
 	
 	Sub FormAlbumBrowserClosing(sender As Object, e As EventArgs)
@@ -417,12 +433,20 @@ Public Partial Class FormAlbumBrowser
         g3Prefs.ReadXmlSchema(Application.StartupPath & "\config.xsd")
         g3Prefs.ReadXml(strDataFolder & "\config.xml")
         
-        ' If EmptyCache is checked, delete and re-create the cache folder.
+        ' If EmptyCache is checked, delete the contents of the image cache folder.
         results = g3Prefs.Tables(0).Select("ConfigName = 'EmptyCache'")
         If results(0).Item(1) = True Then
-			Dim CacheDirectory As New System.IO.DirectoryInfo(strCacheFolder)
-			CacheDirectory.Delete(true)
-			CacheDirectory.Create()        	
+        	Dim CacheDirectory As New System.IO.DirectoryInfo(strCacheFolder)
+        	Dim oneFile As System.IO.FileInfo
+        	
+        	' Delete files one at a time, skipping anything that causes an error.
+        	'   Errors usually mean the file is still in use.
+        	For Each oneFile In CacheDirectory.GetFiles()
+        		Try
+        			oneFile.Delete()
+        		Catch ex As Exception
+        		End Try
+        	Next
         End If
 	End Sub ' END FormAlbumBrowserClosing
 	
@@ -453,7 +477,7 @@ Public Partial Class FormAlbumBrowser
 	Sub CreateNewAlbumToolStripMenuItemClick(sender As Object, e As EventArgs)
 		' Display the create new album window.
 		
-		' Store the ID # for the selected album, in case the user 
+		' Store the ID # for the selected album, in case the user
 		'   selects something else before this sub finishes.
 		Dim SelectedAlbumID As String = treeAlbums.SelectedNode.Tag
 		
