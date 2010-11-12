@@ -70,6 +70,16 @@
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
     <Compile Include="ClassFileDownload.vb" />
+    <Compile Include="FormDownload.Designer.vb">
+      <DependentUpon>FormDownload.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormDownload.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <EmbeddedResource Include="FormDownload.resx">
+      <DependentUpon>FormDownload.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClassFileUpload.vb" />
