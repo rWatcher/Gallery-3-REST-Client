@@ -181,7 +181,6 @@
       <Project>{B32C3E8A-A17E-4EC3-9229-7241E84B7202}</Project>
       <Name>GalleryLib</Name>
     </ProjectReference>
-    <Content Include="Gallery 3 REST Client.cd" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="My Project\AssemblyInfo.vb" />
