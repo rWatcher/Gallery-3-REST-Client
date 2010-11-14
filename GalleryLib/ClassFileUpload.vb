@@ -78,7 +78,9 @@ Class ClassFileUpload
     	Catch ex As Exception
     		' In the event of an error, display a message, then
     		'   return false so the calling code knows something went wrong.
-    		MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    		Dim ErrorDialog As New FormErrorDialog
+    		ErrorDialog.SetText ("Error", ex.Message.ToString, ex.StackTrace.ToString)
+    		ErrorDialog.ShowDialog()
     		Return False
     	End Try
     End Function ' END Upload
@@ -123,7 +125,9 @@ Class ClassFileUpload
     		' In the event of an error, display a message, then set
     		'   strServerResponse to "-ERROR" so the calling function
     		'   knows something went wrong.
-    		MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    		Dim ErrorDialog As New FormErrorDialog
+    		ErrorDialog.SetText ("Error", ex.Message.ToString, ex.StackTrace.ToString)
+    		ErrorDialog.ShowDialog()
     		strServerResponse = "-ERROR"
     	End Try
     End Sub ' ReadRequestStreamCallback
@@ -150,7 +154,9 @@ Class ClassFileUpload
     		' In the event of an error, display a message, then set
     		'   strServerResponse to "-ERROR" so the calling function
     		'   knows something went wrong.
-    		MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    		Dim ErrorDialog As New FormErrorDialog
+    		ErrorDialog.SetText ("Error", ex.Message.ToString, ex.StackTrace.ToString)
+    		ErrorDialog.ShowDialog()
     		strServerResponse = "-ERROR"
     	End Try
     End Sub ' END ReadResponseCallback

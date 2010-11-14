@@ -153,7 +153,10 @@ Public Class Gallery3
             Catch ex As Exception
                 ' In the event of an error (such as a bad password, or a server error),
                 '   display the message and return false.
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                'MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Dim ErrorDialog As New FormErrorDialog
+                ErrorDialog.SetText ("Error", ex.Message.ToString, ex.StackTrace.ToString)
+                ErrorDialog.ShowDialog()
                 Return False
             End Try
         End Function ' END Login
@@ -189,7 +192,9 @@ Public Class Gallery3
             Catch ex As Exception
                 ' In the event of an error (such as a bad password, or a server error),
                 '   display the message and return false
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Dim ErrorDialog As New FormErrorDialog
+                ErrorDialog.SetText ("Error", ex.Message.ToString, ex.StackTrace.ToString)
+                ErrorDialog.ShowDialog()
                 Return False
             End Try
         End Function ' END Login
@@ -247,7 +252,9 @@ Public Class Gallery3
                 End If
             Catch ex As Exception
                 ' In the event of an error, display the error and return Nothing.
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Dim ErrorDialog As New FormErrorDialog
+                ErrorDialog.SetText ("Error", ex.Message.ToString, ex.StackTrace.ToString)
+                ErrorDialog.ShowDialog()
                 Return Nothing
             End Try
         End Function ' END GetItem
@@ -346,7 +353,9 @@ Public Class Gallery3
 
             Catch ex As Exception
                 ' In the event of an error, display the message and return Nothing.
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Dim ErrorDialog As New FormErrorDialog
+                ErrorDialog.SetText ("Error", ex.Message.ToString, ex.StackTrace.ToString)
+                ErrorDialog.ShowDialog()
                 Return Nothing
             End Try
         End Function ' END GetItems
@@ -390,7 +399,9 @@ Public Class Gallery3
 
             Catch ex As Exception
                 ' In the event of an error, display the message and return "".
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Dim ErrorDialog As New FormErrorDialog
+                ErrorDialog.SetText ("Error", ex.Message.ToString, ex.StackTrace.ToString)
+                ErrorDialog.ShowDialog()
                 Return ""
             End Try
         End Function ' END GetItemChecksum
@@ -494,7 +505,9 @@ Public Class Gallery3
                 return True
             Catch ex As Exception
                 ' In the event of an error, display the message and return false.
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Dim ErrorDialog As New FormErrorDialog
+                ErrorDialog.SetText ("Error", ex.Message.ToString, ex.StackTrace.ToString)
+                ErrorDialog.ShowDialog()
                 Return False
             End Try        	
         End Function ' END CreateAlbum

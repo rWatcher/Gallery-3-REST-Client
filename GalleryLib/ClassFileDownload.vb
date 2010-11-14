@@ -121,7 +121,9 @@ Friend Class ClassFileDownload
 				
 			Catch ex As Exception
 				' In the event of an error, display the message and return False.
-				MessageBox.Show(ex.ToString, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+				Dim ErrorDialog As New FormErrorDialog
+				ErrorDialog.SetText ("Error", ex.Message.ToString, ex.StackTrace.ToString)
+				ErrorDialog.ShowDialog()
 				boolReturnValue = False
 				Exit Sub
 			End Try
