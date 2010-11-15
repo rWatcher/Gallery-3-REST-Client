@@ -217,7 +217,7 @@ Public Partial Class FormAlbumBrowser
         	End If
         
         ' If an error occurs while the program is quiting, it probably means
-        '   we just tried to access a form object that no longer exists, so 
+        '   we just tried to access a form object that no longer exists, so
         '   ignore it and quit.  Or else display a message.
         Catch ex As Exception
         	If Me.boolClosing = False Then
