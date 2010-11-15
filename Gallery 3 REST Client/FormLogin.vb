@@ -97,13 +97,7 @@ Public Partial Class FormLogin
         GalleryAlbumWindow.GalleryClient = galleryClient
         GalleryAlbumWindow.Text = "Connected to " & txtGalleryURL.Text.Replace("http://", "")
         Me.Hide()
-        GalleryAlbumWindow.Show()
-        
-        ' Wait until the album window is closed before exiting.
-        While GalleryAlbumWindow.Visible = True
-        	application.DoEvents()
-        End While
-        Me.Close()
+        GalleryAlbumWindow.Show()        
 	End Sub ' END ButtonLoginClick
 	
 	Sub FormLoginLoad(sender As Object, e As EventArgs)
