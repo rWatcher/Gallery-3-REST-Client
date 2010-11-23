@@ -280,16 +280,27 @@ Public Class Gallery3
             For Each oneURL In ItemURLs
             	
             	' Figure out the ID# for the current URL.
-            	Dim ItemID as Integer
+            	Dim ItemID As Integer
+            	Dim tempURL As String
+            	
+            	' If the URL ends in a "/", remove it.
             	If oneURL.EndsWith("/") Then
-            		Dim tempURL as String = oneURL.Substring(0, oneURL.Length - 1)
-            		ItemID = Convert.ToInt32(tempURL.Substring(tempURL.LastIndexOf("/") + 1))
+            		tempURL = oneURL.Substring(0, oneURL.Length - 1)
             	Else
-            		ItemID = Convert.ToInt32(oneURL.Substring(oneURL.LastIndexOf("/") + 1))
-                End If
+            		tempURL = oneURL
+            	End If
+            	
+            	' If url_suffix is used to create a dummy file extension, then we need to
+            	'   detect and remove it from the end of the URL before converting to an integer.
+            	Dim tempItemStr As String = tempURL.Substring(tempURL.LastIndexOf("/") + 1)
+            	If tempItemStr.IndexOf(".") > 0 Then
+            		ItemID = Convert.ToInt32(tempItemStr.Substring(0, tempItemStr.IndexOf(".")))
+            	Else
+            		ItemID = Convert.ToInt32(tempItemStr)
+            	End If
                 
                 ' Check and see if this item is already cached.
-                '   If it is, used the cached response instead of 
+                '   If it is, used the cached response instead of
                 '   re-requesting it.
                 Dim strCachedResults As String = ItemCache.GetItem(ItemID)
                 If strCachedResults = "" Then
@@ -434,7 +445,7 @@ Public Class Gallery3
         	Dim objDownloadFile As New ClassFileDownload
         	objDownloadFile.strURL = url
         	objDownloadFile.strSavedFileName = SavedFileName
-        	objDownloadFile.Gallery3RESTKey = Gallery3RESTKey 
+        	objDownloadFile.Gallery3RESTKey = Gallery3RESTKey
         	objDownloadFile.boolShowDownloadProgress = ShowProgress
         	
         	' Run the download as a seperate thread, so it won't slow down the main application.
@@ -478,7 +489,7 @@ Public Class Gallery3
 			
             Try
             	' Open a new web connection to create the album with.
-                Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(Gallery3URL & "rest/item/" & intParentID.ToString), System.Net.HttpWebRequest)
+                Dim request As System.Net.HttpWebRequest = CType(System.Net.WebRequest.Create(Gallery3URL & "rest/item/" & intParentID.ToString & "/"), System.Net.HttpWebRequest)
 				request.UserAgent = "rWatcher's Gallery 3 Client"
                 request.Credentials = System.Net.CredentialCache.DefaultCredentials
                 request.Method = "POST"
@@ -509,7 +520,7 @@ Public Class Gallery3
                 ErrorDialog.SetText ("Error", ex.Message.ToString, ex.StackTrace.ToString)
                 ErrorDialog.ShowDialog()
                 Return False
-            End Try        	
+            End Try
         End Function ' END CreateAlbum
     End Class ' END Client
 End Class ' End Gallery3
