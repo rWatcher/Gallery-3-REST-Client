@@ -215,16 +215,29 @@ Public Class Gallery3
         '''<returns>The details for the specified item.  On error returns Nothing.</returns>
         Public Function GetItem(ByVal ItemURL As String) As Linq.JObject
             Try
-                '  Make sure ItemURL does not end with a "/",
-                '   Fix it if it does.
-                If ItemURL.EndsWith("/") Then
-                    ItemURL = ItemURL.Substring(0, ItemURL.Length - 1)
-                End If
-
-                ' Check and see if this item was already requested.
-                '   If so, return the cached results.  If not,
-                '   request it from the server.
-                Dim ItemID As Integer = Convert.ToInt32(ItemURL.Substring(ItemURL.LastIndexOf("/") + 1))
+            	' Figure out the ID# for the current URL.
+            	Dim ItemID As Integer
+            	Dim tempURL As String
+            	
+            	' If the URL ends in a "/", remove it.
+            	If ItemURL.EndsWith("/") Then
+            		tempURL = ItemURL.Substring(0, ItemURL.Length - 1)
+            	Else
+            		tempURL = ItemURL
+            	End If
+            	
+            	' If url_suffix is used to create a dummy file extension, then we need to
+            	'   detect and remove it from the end of the URL before converting to an integer.
+            	Dim tempItemStr As String = tempURL.Substring(tempURL.LastIndexOf("/") + 1)
+            	If tempItemStr.IndexOf(".") > 0 Then
+            		ItemID = Convert.ToInt32(tempItemStr.Substring(0, tempItemStr.IndexOf(".")))
+            	Else
+            		ItemID = Convert.ToInt32(tempItemStr)
+            	End If
+            	
+            	' Figure out if the current item is already cached.
+            	'   If it is, return the cached version.
+            	'   If not, request it from the server.
                 Dim strCachedResults As String = ItemCache.GetItem(ItemID)
                 If strCachedResults <> "" Then
                     Return Linq.JObject.Parse(strCachedResults)
