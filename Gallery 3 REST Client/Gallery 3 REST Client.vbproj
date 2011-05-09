@@ -121,7 +121,9 @@
     <Compile Include="FormCreateAlbum.Designer.vb">
       <DependentUpon>FormCreateAlbum.vb</DependentUpon>
     </Compile>
-    <Compile Include="FormCreateAlbum.vb" />
+    <Compile Include="FormCreateAlbum.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormLogin.Designer.vb">
       <DependentUpon>FormLogin.vb</DependentUpon>
     </Compile>
@@ -131,7 +133,9 @@
     <Compile Include="FormPreferences.Designer.vb">
       <DependentUpon>FormPreferences.vb</DependentUpon>
     </Compile>
-    <Compile Include="FormPreferences.vb" />
+    <Compile Include="FormPreferences.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormUploadQueue.Designer.vb">
       <DependentUpon>FormUploadQueue.vb</DependentUpon>
     </Compile>
@@ -158,6 +162,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormCreateAlbum.resx">
       <DependentUpon>FormCreateAlbum.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormLogin.resx">
       <DependentUpon>FormLogin.vb</DependentUpon>
@@ -165,6 +170,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormPreferences.resx">
       <DependentUpon>FormPreferences.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormUploadQueue.resx">
       <DependentUpon>FormUploadQueue.vb</DependentUpon>
