@@ -97,15 +97,15 @@ Class ClassFileUpload
 			fReader.Close()
 			
 			' Set up mime data to send with the file.
-			Dim strBeforeFileUpload As String = "------------196f00b77b968397849367c61a2080" & vbNewLine & _
-												"Content-Disposition: form-data; name=""entity""" & _
-												vbNewLine & vbNewLine & "{""name"":""" & _
-												UploadedFileInfo.Name & """,""type"":""photo"",""title"":""" & _
-												UploadedFileInfo.Name.Replace(UploadedFileInfo.Extension, "") & _
-												"""}" & vbNewLine & "------------196f00b77b968397849367c61a2080" & _
-												vbNewLine & "Content-Disposition: form-data; name=""file""; filename=""" & _
-												UploadedFileInfo.Name & """" & vbNewLine & "Content-Type: application/octet-stream" & _
-												vbNewLine & vbNewLine
+            Dim strBeforeFileUpload As String = "------------196f00b77b968397849367c61a2080" & vbNewLine & _
+                     "Content-Disposition: form-data; name=""entity""" & _
+                     vbNewLine & vbNewLine & "{""name"":""" & _
+                     UploadedFileInfo.Name & """,""type"":""photo"",""title"":""" & _
+                     UploadedFileInfo.Name.Replace(UploadedFileInfo.Extension, "").Replace("_", " ") & _
+                     """}" & vbNewLine & "------------196f00b77b968397849367c61a2080" & _
+                     vbNewLine & "Content-Disposition: form-data; name=""file""; filename=""" & _
+                     UploadedFileInfo.Name & """" & vbNewLine & "Content-Type: application/octet-stream" & _
+                     vbNewLine & vbNewLine
 			Dim strAfterFileUpload As String = vbNewLine & "------------196f00b77b968397849367c61a2080--" & vbNewLine
 			
 			' Set up web connection and upload the file + mime data.
