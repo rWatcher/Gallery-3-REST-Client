@@ -29,6 +29,7 @@ Public Partial Class FormChecksums
 	End Sub
 
     Public GalleryClient As Gallery3.Client
+    Public BadFilesCount As Integer = 0
 
     Public Sub LoadLocalFileList()
         ' Load list of local files.
@@ -95,7 +96,10 @@ Public Partial Class FormChecksums
     Public Sub CompareFiles()
         ' Load local and remote checksums for the contents of listFiles,
         '   and compare the checksums to look for modified files.
-        
+
+        ' Track the number of files that didn't match.
+        Dim BadFilesInt As Integer = 0
+
         ' Loop through each item in the list, generating local and remote
         '   checksums for everything.  Then compare the checksums to look
         '   for modified or missing files.
@@ -108,6 +112,7 @@ Public Partial Class FormChecksums
                     Dim FileReader As New System.IO.FileStream(txtLocalFolder.Text & "\" & OneFileItem.Text, IO.FileMode.Open, IO.FileAccess.Read)
                     Dim hash() As Byte = sha1.ComputeHash(FileReader)
                     OneFileItem.SubItems.Add(ByteArrayToString(hash))
+                    FileReader.Close()
                 End Using
             Else
                 OneFileItem.SubItems.Add("")
@@ -134,9 +139,13 @@ Public Partial Class FormChecksums
             '   bold the entry.
             If OneFileItem.SubItems(2).Text <> OneFileItem.SubItems(3).Text Then
                 OneFileItem.Font = New Font(listFiles.Font, FontStyle.Bold)
+                BadFilesInt = BadFilesInt + 1
             End If
             Application.DoEvents()
         Next
+
+        ' Store the number of bad files in a global variable.
+        Me.BadFilesCount = BadFilesInt
     End Sub ' END CompareFiles
 
     Private Function ByteArrayToString(ByVal arrInput() As Byte) As String
