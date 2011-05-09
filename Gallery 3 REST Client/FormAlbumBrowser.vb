@@ -332,7 +332,13 @@ Public Partial Class FormAlbumBrowser
             checksumWindow.CompareFiles()
             
             ' Set the status text and turn control back over to the user.
-            checksumWindow.statusCompare.Text = "Files that didn't match have been bolded."
+            If checksumWindow.BadFilesCount = 0 Then
+                checksumWindow.statusCompare.Text = "All Files Matched."
+            ElseIf checksumWindow.BadFilesCount = 1 Then
+                checksumWindow.statusCompare.Text = "One file did not match and has been bolded."
+            Else
+                checksumWindow.statusCompare.Text = checksumWindow.BadFilesCount.ToString & " files did not match and have been bolded."
+            End If
             Me.Cursor = Cursors.Default
         End If
 	End Sub ' END CompareToLocalFolderToolStripMenuItemClick
