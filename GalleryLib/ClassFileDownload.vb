@@ -49,8 +49,10 @@ Friend Class ClassFileDownload
 			request.Timeout = 90 * 1000 ' seconds * 1000
 			request.Credentials = System.Net.CredentialCache.DefaultCredentials
 		Catch ex As Exception
-			MessageBox.Show(ex.ToString, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-			boolReturnValue = False
+            Dim ErrorDialog As New FormErrorDialog
+            ErrorDialog.SetText("Error", ex.Message.ToString, ex.StackTrace.ToString)
+            ErrorDialog.ShowDialog()
+            boolReturnValue = False
 			Exit Sub
 		End Try
 		
