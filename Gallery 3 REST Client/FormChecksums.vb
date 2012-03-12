@@ -1,5 +1,5 @@
 ﻿'  Gallery 3 REST Client
-'  Copyright 2010 Eric Cavaliere
+'  Copyright 2010-2012 Eric Cavaliere
 '
 '  This program is free software; you can redistribute it and/or modify
 '  it under the terms of the GNU General Public License as published by
@@ -149,7 +149,7 @@ Public Partial Class FormChecksums
     End Sub ' END CompareFiles
 
     Private Function ByteArrayToString(ByVal arrInput() As Byte) As String
-    	' Convert the checksum generated for the local file 
+    	' Convert the checksum generated for the local file
     	'   to a string, for comparison with the remote checksum.
     	
         Dim sb As New System.Text.StringBuilder(arrInput.Length * 2)
@@ -158,4 +158,59 @@ Public Partial Class FormChecksums
         Next
         Return sb.ToString().ToLower
     End Function ' END ByteArrayToString
+	
+	Sub ButtonRecheckClick(sender As Object, e As EventArgs)
+		' Disable the mouse cursor.
+        Me.Cursor = Cursors.WaitCursor
+        ButtonRecheck.Enabled = False
+        statusCompare.Text = "Generating Checksums"
+        
+        ' Track the number of files that didn't match.
+        Dim BadFilesInt As Integer = 0
+
+        ' Loop through each item in the list, checking for bolded items.        
+        dim OneFileItem as ListViewItem
+        For Each OneFileItem In listFiles.Items
+        	If OneFileItem.Font.Style = FontStyle.Bold Then
+        		
+        		' If the current item has "ERROR" for the remote checksum, attempt
+        		'   to generate a new checksum.
+        		If OneFileItem.SubItems(3).Text = "ERROR" Then
+                	Dim RemoteChecksum As String = GalleryClient.GetItemChecksum(Convert.ToInt32(OneFileItem.Tag.ToString.Replace("""", "")), "sha1")
+
+                	' If we've successfully generated a checksum, compare it to the local file.
+                	'   Keep track of files that do not match.
+                	If RemoteChecksum <> "" Then
+                		OneFileItem.SubItems(3).Text = RemoteChecksum
+                		If OneFileItem.SubItems(2).Text <> OneFileItem.SubItems(3).Text Then
+                			BadFilesInt = BadFilesInt + 1
+                		Else
+                			OneFileItem.Font = New Font (listFiles.Font, FontStyle.Regular)
+                		End If
+                	Else
+                		BadFilesInt = BadFilesInt +1
+                	End If
+        		Else
+        			BadFilesInt = BadFilesInt +1
+        		End If
+        	End If
+        	Application.DoEvents()
+        Next
+        
+        ' Set the status text and turn control back over to the user.
+        If BadFilesInt = 0 Then
+            statusCompare.Text = "All Files Matched."
+        ElseIf BadFilesInt = 1 Then
+            statusCompare.Text = "One file did not match and has been bolded."
+            ButtonRecheck.Enabled = True
+        Else
+            statusCompare.Text = BadFilesInt.ToString & " files did not match and have been bolded."
+            ButtonRecheck.Enabled = True
+        End If
+        
+        ' Enable the mouse cursor.
+        Me.Cursor = Cursors.Default
+        
+	End Sub ' END ButtonRecheckClick
+	
 End Class ' END FormChecksums

@@ -77,9 +77,9 @@ Partial Class FormPreferences
 		Me.checkBoxImageCache.AutoSize = true
 		Me.checkBoxImageCache.Location = New System.Drawing.Point(12, 96)
 		Me.checkBoxImageCache.Name = "checkBoxImageCache"
-		Me.checkBoxImageCache.Size = New System.Drawing.Size(164, 17)
+		Me.checkBoxImageCache.Size = New System.Drawing.Size(202, 17)
 		Me.checkBoxImageCache.TabIndex = 3
-		Me.checkBoxImageCache.Text = "Empty Image Cache On Exit?"
+		Me.checkBoxImageCache.Text = "Empty Image Cache On Logout/Exit?"
 		Me.checkBoxImageCache.UseVisualStyleBackColor = true
 		'
 		'textGallery3URL

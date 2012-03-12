@@ -1,5 +1,5 @@
 ﻿'  Gallery 3 REST Client
-'  Copyright 2010 Eric Cavaliere
+'  Copyright 2010-2012 Eric Cavaliere
 '
 '  This program is free software; you can redistribute it and/or modify
 '  it under the terms of the GNU General Public License as published by
@@ -221,7 +221,7 @@ Public Partial Class FormAlbumBrowser
         '   ignore it and quit.  Or else display a message.
         Catch ex As Exception
         	If Me.boolClosing = False Then
-        		MessageBox.Show (ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        		MessageBox.Show (ex.Message.ToString & vbNewLine & ex.StackTrace.ToString, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         	End If
         	Exit Sub
         End Try
@@ -336,8 +336,10 @@ Public Partial Class FormAlbumBrowser
                 checksumWindow.statusCompare.Text = "All Files Matched."
             ElseIf checksumWindow.BadFilesCount = 1 Then
                 checksumWindow.statusCompare.Text = "One file did not match and has been bolded."
+                checksumWindow.ButtonRecheck.Enabled = True
             Else
                 checksumWindow.statusCompare.Text = checksumWindow.BadFilesCount.ToString & " files did not match and have been bolded."
+                checksumWindow.ButtonRecheck.Enabled = True
             End If
             Me.Cursor = Cursors.Default
         End If
@@ -362,14 +364,10 @@ Public Partial Class FormAlbumBrowser
 		End While
 		
 		' Display the window.
-		WindowUploadQueue.Show()
-		
 		' Wait until the user is finished uploading files, then
 		'   remove this album from the cache so the changes will be
 		'   visible.
-		While WindowUploadQueue.Visible = True
-			Application.DoEvents()
-		End While
+		WindowUploadQueue.ShowDialog()
 		GalleryClient.ItemCache.RemoveItem(AlbumID)
 		
 		' If the album selection hasn't changed, reload it to display the new uploads.
@@ -417,7 +415,7 @@ Public Partial Class FormAlbumBrowser
 		' Display the About window.
 		
 		Dim WindowAbout As New FormAbout
-		WindowAbout.Show()
+		WindowAbout.ShowDialog()
 	End Sub ' END AboutToolStripMenuItemClick
 	
 	Sub EmptyImageCacheToolStripMenuItemClick(sender As Object, e As EventArgs)
@@ -472,7 +470,6 @@ Public Partial Class FormAlbumBrowser
         
         ' Signal to any running threads/windows that we're quiting.
 		Me.boolClosing = True
-		Application.Exit()
 	End Sub ' END FormAlbumBrowserClosing
 	
 	Sub FullscreenToolStripMenuItemClick(sender As Object, e As EventArgs)
@@ -496,7 +493,7 @@ Public Partial Class FormAlbumBrowser
 		' Display the preferences window
 		
 		Dim WindowPreferences As New FormPreferences
-		WindowPreferences.Show()
+		WindowPreferences.ShowDialog()
 	End Sub ' END PreferencesToolStripMenuItemClick
 	
 	Sub CreateNewAlbumToolStripMenuItemClick(sender As Object, e As EventArgs)
@@ -510,12 +507,7 @@ Public Partial Class FormAlbumBrowser
 		Dim WindowNewAlbum As New FormCreateAlbum
 		WindowNewAlbum.GalleryClient = GalleryClient
 		WindowNewAlbum.intParentID = Convert.ToInt32(SelectedAlbumID)
-		WindowNewAlbum.Show()
-		
-		' While the window is visible, pause this sub.
-		While WindowNewAlbum.Visible
-			Application.DoEvents()
-		End While
+		WindowNewAlbum.ShowDialog()
 		
 		' Once the window is no longer visible, assume a new album was created.
 		'   Remove the cached data for the parent album in order to force a refresh.
@@ -526,4 +518,10 @@ Public Partial Class FormAlbumBrowser
 		  TreeAlbumsAfterSelect(sender, new TreeViewEventArgs(TreeAlbums.SelectedNode))
 		End If
 	End Sub ' END CreateNewAlbumToolStripMenuItemClick
+	
+	Sub ExitToolStripMenuItemClick(sender As Object, e As EventArgs)
+		' Close this window.
+		Me.Close()
+	End Sub ' END ExitToolStripMenuItemClick
+	
 End Class ' EndFormAlbumBrowser

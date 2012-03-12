@@ -51,12 +51,13 @@ Partial Class FormAlbumBrowser
 		Me.toolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator
 		Me.preferencesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.toolStripMenuItem2 = New System.Windows.Forms.ToolStripSeparator
-		Me.aboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
+		Me.exitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.albumToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.uploadFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.createNewAlbumToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.toolStripMenuItem3 = New System.Windows.Forms.ToolStripSeparator
 		Me.compareToLocalFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
+		Me.aboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.splitContainer1 = New System.Windows.Forms.SplitContainer
 		Me.treeAlbums = New System.Windows.Forms.TreeView
 		Me.listPictures = New System.Windows.Forms.ListView
@@ -72,7 +73,7 @@ Partial Class FormAlbumBrowser
 		'
 		'menuMain
 		'
-		Me.menuMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.optionsToolStripMenuItem, Me.albumToolStripMenuItem})
+		Me.menuMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.optionsToolStripMenuItem, Me.albumToolStripMenuItem, Me.aboutToolStripMenuItem})
 		Me.menuMain.Location = New System.Drawing.Point(0, 0)
 		Me.menuMain.Name = "menuMain"
 		Me.menuMain.Size = New System.Drawing.Size(624, 24)
@@ -81,7 +82,7 @@ Partial Class FormAlbumBrowser
 		'
 		'optionsToolStripMenuItem
 		'
-		Me.optionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.fullscreenToolStripMenuItem, Me.emptyImageCacheToolStripMenuItem, Me.toolStripMenuItem1, Me.preferencesToolStripMenuItem, Me.toolStripMenuItem2, Me.aboutToolStripMenuItem})
+		Me.optionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.fullscreenToolStripMenuItem, Me.emptyImageCacheToolStripMenuItem, Me.toolStripMenuItem1, Me.preferencesToolStripMenuItem, Me.toolStripMenuItem2, Me.exitToolStripMenuItem})
 		Me.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem"
 		Me.optionsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
 		Me.optionsToolStripMenuItem.Text = "Options"
@@ -119,12 +120,13 @@ Partial Class FormAlbumBrowser
 		Me.toolStripMenuItem2.Name = "toolStripMenuItem2"
 		Me.toolStripMenuItem2.Size = New System.Drawing.Size(177, 6)
 		'
-		'aboutToolStripMenuItem
+		'exitToolStripMenuItem
 		'
-		Me.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem"
-		Me.aboutToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-		Me.aboutToolStripMenuItem.Text = "About"
-		AddHandler Me.aboutToolStripMenuItem.Click, AddressOf Me.AboutToolStripMenuItemClick
+		Me.exitToolStripMenuItem.Name = "exitToolStripMenuItem"
+		Me.exitToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Q),System.Windows.Forms.Keys)
+		Me.exitToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+		Me.exitToolStripMenuItem.Text = "Log Out"
+		AddHandler Me.exitToolStripMenuItem.Click, AddressOf Me.ExitToolStripMenuItemClick
 		'
 		'albumToolStripMenuItem
 		'
@@ -158,6 +160,13 @@ Partial Class FormAlbumBrowser
 		Me.compareToLocalFolderToolStripMenuItem.Size = New System.Drawing.Size(207, 22)
 		Me.compareToLocalFolderToolStripMenuItem.Text = "Compare To Local Folder"
 		AddHandler Me.compareToLocalFolderToolStripMenuItem.Click, AddressOf Me.CompareToLocalFolderToolStripMenuItemClick
+		'
+		'aboutToolStripMenuItem
+		'
+		Me.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem"
+		Me.aboutToolStripMenuItem.Size = New System.Drawing.Size(52, 20)
+		Me.aboutToolStripMenuItem.Text = "About"
+		AddHandler Me.aboutToolStripMenuItem.Click, AddressOf Me.AboutToolStripMenuItemClick
 		'
 		'splitContainer1
 		'
@@ -244,6 +253,7 @@ Partial Class FormAlbumBrowser
 		Me.ResumeLayout(false)
 		Me.PerformLayout
 	End Sub
+	Private exitToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Private toolStripMenuItem3 As System.Windows.Forms.ToolStripSeparator
 	Private createNewAlbumToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Private toolStripMenuItem2 As System.Windows.Forms.ToolStripSeparator

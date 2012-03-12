@@ -54,6 +54,7 @@ Partial Class FormChecksums
 		Me.columnRemoteChecksum = New System.Windows.Forms.ColumnHeader
 		Me.statusStripCompareWindow = New System.Windows.Forms.StatusStrip
 		Me.statusCompare = New System.Windows.Forms.ToolStripStatusLabel
+		Me.buttonRecheck = New System.Windows.Forms.Button
 		Me.statusStripCompareWindow.SuspendLayout
 		Me.SuspendLayout
 		'
@@ -77,6 +78,8 @@ Partial Class FormChecksums
 		'
 		'txtLocalFolder
 		'
+		Me.txtLocalFolder.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
+						Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
 		Me.txtLocalFolder.Location = New System.Drawing.Point(74, 9)
 		Me.txtLocalFolder.Multiline = true
 		Me.txtLocalFolder.Name = "txtLocalFolder"
@@ -87,6 +90,8 @@ Partial Class FormChecksums
 		'
 		'txtRemoteAlbum
 		'
+		Me.txtRemoteAlbum.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
+						Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
 		Me.txtRemoteAlbum.Location = New System.Drawing.Point(74, 57)
 		Me.txtRemoteAlbum.Multiline = true
 		Me.txtRemoteAlbum.Name = "txtRemoteAlbum"
@@ -103,7 +108,7 @@ Partial Class FormChecksums
 		Me.listFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.columnLocalFile, Me.columnRemoteFile, Me.columnLocalChecksum, Me.columnRemoteChecksum})
 		Me.listFiles.Location = New System.Drawing.Point(12, 105)
 		Me.listFiles.Name = "listFiles"
-		Me.listFiles.Size = New System.Drawing.Size(422, 208)
+		Me.listFiles.Size = New System.Drawing.Size(422, 179)
 		Me.listFiles.TabIndex = 4
 		Me.listFiles.UseCompatibleStateImageBehavior = false
 		Me.listFiles.View = System.Windows.Forms.View.Details
@@ -143,11 +148,24 @@ Partial Class FormChecksums
 		Me.statusCompare.Size = New System.Drawing.Size(118, 17)
 		Me.statusCompare.Text = "toolStripStatusLabel1"
 		'
+		'buttonRecheck
+		'
+		Me.buttonRecheck.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+		Me.buttonRecheck.Enabled = false
+		Me.buttonRecheck.Location = New System.Drawing.Point(345, 290)
+		Me.buttonRecheck.Name = "buttonRecheck"
+		Me.buttonRecheck.Size = New System.Drawing.Size(89, 23)
+		Me.buttonRecheck.TabIndex = 6
+		Me.buttonRecheck.Text = "Recheck Errors"
+		Me.buttonRecheck.UseVisualStyleBackColor = true
+		AddHandler Me.buttonRecheck.Click, AddressOf Me.ButtonRecheckClick
+		'
 		'FormChecksums
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.ClientSize = New System.Drawing.Size(446, 338)
+		Me.Controls.Add(Me.buttonRecheck)
 		Me.Controls.Add(Me.statusStripCompareWindow)
 		Me.Controls.Add(Me.listFiles)
 		Me.Controls.Add(Me.txtRemoteAlbum)
@@ -162,6 +180,7 @@ Partial Class FormChecksums
 		Me.ResumeLayout(false)
 		Me.PerformLayout
 	End Sub
+	Friend buttonRecheck As System.Windows.Forms.Button
 	Friend statusCompare As System.Windows.Forms.ToolStripStatusLabel
 	Private statusStripCompareWindow As System.Windows.Forms.StatusStrip
 	Private columnRemoteChecksum As System.Windows.Forms.ColumnHeader

@@ -1,5 +1,5 @@
 ﻿'  Gallery 3 REST Client
-'  Copyright 2010 Eric Cavaliere
+'  Copyright 2010-2012 Eric Cavaliere
 '
 '  This program is free software; you can redistribute it and/or modify
 '  it under the terms of the GNU General Public License as published by
@@ -96,8 +96,13 @@ Public Partial Class FormLogin
         Dim GalleryAlbumWindow As New formAlbumBrowser
         GalleryAlbumWindow.GalleryClient = galleryClient
         GalleryAlbumWindow.Text = "Connected to " & txtGalleryURL.Text.Replace("http://", "")
+        
+        ' Hide this window until the user closes the album window, then display
+        '   a logout successful message.
         Me.Hide()
-        GalleryAlbumWindow.Show()        
+        GalleryAlbumWindow.ShowDialog()
+        Me.Show()
+        statusLabelLogin.Text = "Logout Successful"
 	End Sub ' END ButtonLoginClick
 	
 	Sub FormLoginLoad(sender As Object, e As EventArgs)
