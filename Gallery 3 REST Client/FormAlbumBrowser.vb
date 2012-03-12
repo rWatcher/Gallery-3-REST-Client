@@ -37,7 +37,7 @@ Public Partial Class FormAlbumBrowser
 	End Sub
 	
 	Sub FormAlbumBrowserLoad(sender As Object, e As EventArgs)
-		' Handles initialing loading the album window.
+		' Handles initial loading of the album window.
 		'   Download details of Item #1 (the root album)
 		'   and all of its member items, also handle initial
 		'   setup of the form.
