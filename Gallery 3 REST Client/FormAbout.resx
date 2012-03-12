@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="richTextBoxLicense.Text" xml:space="preserve">
-    <value>Gallery 3 REST Client Version 1.1.0
+    <value>Gallery 3 REST Client Version 1.2.0
 Copyright 2010-2012 Eric Cavaliere
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any later version.
